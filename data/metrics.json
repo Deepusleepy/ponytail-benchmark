@@ -1,0 +1,376 @@
+{
+  "task-01": {
+    "title": "Health & time JSON API",
+    "domain": "Backend",
+    "difficulty": "Easy",
+    "lang": "node",
+    "a_is_baseline": true,
+    "baseline": {
+      "files": [
+        "server.js"
+      ],
+      "file_count": 1,
+      "total_lines": 34,
+      "code_lines": 25,
+      "chars": 924,
+      "artifact_tokens_est": 231,
+      "ext_dependencies": 1,
+      "has_check": false
+    },
+    "ponytail": {
+      "files": [
+        "check.js",
+        "server.js"
+      ],
+      "file_count": 2,
+      "total_lines": 58,
+      "code_lines": 49,
+      "chars": 1821,
+      "artifact_tokens_est": 456,
+      "ext_dependencies": 3,
+      "has_check": true
+    }
+  },
+  "task-02": {
+    "title": "In-memory Todo REST API",
+    "domain": "Backend",
+    "difficulty": "Medium",
+    "lang": "node",
+    "a_is_baseline": false,
+    "baseline": {
+      "files": [
+        "server.js"
+      ],
+      "file_count": 1,
+      "total_lines": 218,
+      "code_lines": 167,
+      "chars": 5622,
+      "artifact_tokens_est": 1406,
+      "ext_dependencies": 1,
+      "has_check": true
+    },
+    "ponytail": {
+      "files": [
+        "server.js",
+        "test.js"
+      ],
+      "file_count": 2,
+      "total_lines": 166,
+      "code_lines": 141,
+      "chars": 6061,
+      "artifact_tokens_est": 1516,
+      "ext_dependencies": 3,
+      "has_check": true
+    }
+  },
+  "task-03": {
+    "title": "Token-bucket rate limiter",
+    "domain": "Backend",
+    "difficulty": "Complex",
+    "lang": "node",
+    "a_is_baseline": true,
+    "baseline": {
+      "files": [
+        "limiter.js"
+      ],
+      "file_count": 1,
+      "total_lines": 369,
+      "code_lines": 242,
+      "chars": 12859,
+      "artifact_tokens_est": 3215,
+      "ext_dependencies": 2,
+      "has_check": true
+    },
+    "ponytail": {
+      "files": [
+        "limiter.js"
+      ],
+      "file_count": 1,
+      "total_lines": 129,
+      "code_lines": 91,
+      "chars": 4410,
+      "artifact_tokens_est": 1103,
+      "ext_dependencies": 1,
+      "has_check": true
+    }
+  },
+  "task-04": {
+    "title": "Responsive pricing section",
+    "domain": "Frontend",
+    "difficulty": "Easy",
+    "lang": "html",
+    "a_is_baseline": false,
+    "baseline": {
+      "files": [
+        "index.html"
+      ],
+      "file_count": 1,
+      "total_lines": 313,
+      "code_lines": 277,
+      "chars": 8668,
+      "artifact_tokens_est": 2167,
+      "ext_dependencies": 0,
+      "has_check": false
+    },
+    "ponytail": {
+      "files": [
+        "index.html"
+      ],
+      "file_count": 1,
+      "total_lines": 135,
+      "code_lines": 129,
+      "chars": 3869,
+      "artifact_tokens_est": 968,
+      "ext_dependencies": 0,
+      "has_check": false
+    }
+  },
+  "task-05": {
+    "title": "Todo app with localStorage",
+    "domain": "Frontend",
+    "difficulty": "Medium",
+    "lang": "html",
+    "a_is_baseline": true,
+    "baseline": {
+      "files": [
+        "index.html"
+      ],
+      "file_count": 1,
+      "total_lines": 452,
+      "code_lines": 389,
+      "chars": 10395,
+      "artifact_tokens_est": 2599,
+      "ext_dependencies": 0,
+      "has_check": false
+    },
+    "ponytail": {
+      "files": [
+        "index.html"
+      ],
+      "file_count": 1,
+      "total_lines": 131,
+      "code_lines": 118,
+      "chars": 5126,
+      "artifact_tokens_est": 1282,
+      "ext_dependencies": 0,
+      "has_check": false
+    }
+  },
+  "task-06": {
+    "title": "Sales dashboard (no chart lib)",
+    "domain": "Frontend",
+    "difficulty": "Complex",
+    "lang": "html",
+    "a_is_baseline": false,
+    "baseline": {
+      "files": [
+        "index.html"
+      ],
+      "file_count": 1,
+      "total_lines": 404,
+      "code_lines": 346,
+      "chars": 12251,
+      "artifact_tokens_est": 3063,
+      "ext_dependencies": 0,
+      "has_check": false
+    },
+    "ponytail": {
+      "files": [
+        "index.html"
+      ],
+      "file_count": 1,
+      "total_lines": 173,
+      "code_lines": 158,
+      "chars": 6248,
+      "artifact_tokens_est": 1562,
+      "ext_dependencies": 0,
+      "has_check": false
+    }
+  },
+  "task-07": {
+    "title": "slugify()",
+    "domain": "Algorithm",
+    "difficulty": "Easy",
+    "lang": "python",
+    "a_is_baseline": true,
+    "baseline": {
+      "files": [
+        "slugify.py"
+      ],
+      "file_count": 1,
+      "total_lines": 72,
+      "code_lines": 38,
+      "chars": 2303,
+      "artifact_tokens_est": 576,
+      "ext_dependencies": 0,
+      "has_check": true
+    },
+    "ponytail": {
+      "files": [
+        "slugify.py"
+      ],
+      "file_count": 1,
+      "total_lines": 21,
+      "code_lines": 17,
+      "chars": 785,
+      "artifact_tokens_est": 197,
+      "ext_dependencies": 0,
+      "has_check": true
+    }
+  },
+  "task-08": {
+    "title": "O(1) LRU cache",
+    "domain": "Algorithm",
+    "difficulty": "Medium",
+    "lang": "python",
+    "a_is_baseline": false,
+    "baseline": {
+      "files": [
+        "lru.py"
+      ],
+      "file_count": 1,
+      "total_lines": 219,
+      "code_lines": 163,
+      "chars": 6863,
+      "artifact_tokens_est": 1716,
+      "ext_dependencies": 1,
+      "has_check": true
+    },
+    "ponytail": {
+      "files": [
+        "lru.py"
+      ],
+      "file_count": 1,
+      "total_lines": 75,
+      "code_lines": 56,
+      "chars": 2215,
+      "artifact_tokens_est": 554,
+      "ext_dependencies": 0,
+      "has_check": true
+    }
+  },
+  "task-09": {
+    "title": "Expression evaluator (no eval)",
+    "domain": "Algorithm",
+    "difficulty": "Complex",
+    "lang": "python",
+    "a_is_baseline": true,
+    "baseline": {
+      "files": [
+        "calc.py"
+      ],
+      "file_count": 1,
+      "total_lines": 231,
+      "code_lines": 183,
+      "chars": 7462,
+      "artifact_tokens_est": 1866,
+      "ext_dependencies": 1,
+      "has_check": true
+    },
+    "ponytail": {
+      "files": [
+        "calc.py"
+      ],
+      "file_count": 1,
+      "total_lines": 127,
+      "code_lines": 101,
+      "chars": 3745,
+      "artifact_tokens_est": 937,
+      "ext_dependencies": 0,
+      "has_check": true
+    }
+  },
+  "task-10": {
+    "title": "CSV\u2192JSON CLI",
+    "domain": "CLI / Data",
+    "difficulty": "Medium",
+    "lang": "python",
+    "a_is_baseline": false,
+    "baseline": {
+      "files": [
+        "csv2json.py"
+      ],
+      "file_count": 1,
+      "total_lines": 153,
+      "code_lines": 110,
+      "chars": 5057,
+      "artifact_tokens_est": 1265,
+      "ext_dependencies": 0,
+      "has_check": true
+    },
+    "ponytail": {
+      "files": [
+        "csv2json.py"
+      ],
+      "file_count": 1,
+      "total_lines": 62,
+      "code_lines": 47,
+      "chars": 1837,
+      "artifact_tokens_est": 460,
+      "ext_dependencies": 0,
+      "has_check": true
+    }
+  },
+  "task-11": {
+    "title": "Sales aggregation toolkit",
+    "domain": "CLI / Data",
+    "difficulty": "Medium",
+    "lang": "python",
+    "a_is_baseline": true,
+    "baseline": {
+      "files": [
+        "sales.py"
+      ],
+      "file_count": 1,
+      "total_lines": 123,
+      "code_lines": 89,
+      "chars": 4293,
+      "artifact_tokens_est": 1074,
+      "ext_dependencies": 0,
+      "has_check": true
+    },
+    "ponytail": {
+      "files": [
+        "sales.py"
+      ],
+      "file_count": 1,
+      "total_lines": 56,
+      "code_lines": 40,
+      "chars": 1606,
+      "artifact_tokens_est": 402,
+      "ext_dependencies": 0,
+      "has_check": true
+    }
+  },
+  "task-12": {
+    "title": "Refactor over-engineered code",
+    "domain": "Refactor",
+    "difficulty": "Complex",
+    "lang": "python",
+    "a_is_baseline": false,
+    "baseline": {
+      "files": [
+        "solution.py"
+      ],
+      "file_count": 1,
+      "total_lines": 15,
+      "code_lines": 11,
+      "chars": 315,
+      "artifact_tokens_est": 79,
+      "ext_dependencies": 0,
+      "has_check": true
+    },
+    "ponytail": {
+      "files": [
+        "solution.py"
+      ],
+      "file_count": 1,
+      "total_lines": 14,
+      "code_lines": 10,
+      "chars": 262,
+      "artifact_tokens_est": 66,
+      "ext_dependencies": 0,
+      "has_check": true
+    }
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "task-01": {
+    "A": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "GET /health -> 200 {\"status\":\"ok\",\"uptime\":0.4122548} | GET /time -> 200 {\"now\":\"2026-06-21T08:46:18.661Z\"} | GET /missing -> 404"
+    },
+    "B": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "GET /health -> 200 {\"status\":\"ok\",\"uptime\":0.4137243} | GET /time -> 200 {\"now\":\"2026-06-21T08:46:19.279Z\"} | GET /missing -> 404"
+    }
+  },
+  "task-02": {
+    "A": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "GET /todos -> 200 | POST valid -> 201 {\"id\":1,\"title\":\"buy milk\",\"done\":false} | POST empty -> 400 | GET /todos -> 200 [{\"id\":1,\"title\":\"buy milk\",\"done\":false}]"
+    },
+    "B": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "GET /todos -> 200 | POST valid -> 201 {\"id\":1,\"title\":\"buy milk\",\"done\":false} | POST empty -> 400 | GET /todos -> 200 [{\"id\":1,\"title\":\"buy milk\",\"done\":false}]"
+    }
+  },
+  "task-03": {
+    "A": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "Running self-check...\n  [pass] allows up to capacity then blocks (429 + Retry-After + JSON)\n  [pass] refills over time and caps at capacity\n  [pass] buckets are isolated per client IP\n  [pass] end-to-end over real http server (200,200,429)\nAll self-checks passed.\n"
+    },
+    "B": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "ok 1 - allows capacity then blocks (Retry-After=1)\nok 2 - buckets are per-IP\nok 3 - refills over time\nall self-checks passed\n"
+    }
+  },
+  "task-04": {
+    "A": {
+      "ran": false,
+      "exit": null,
+      "ok": true,
+      "output": "visual (screenshot)"
+    },
+    "B": {
+      "ran": false,
+      "exit": null,
+      "ok": true,
+      "output": "visual (screenshot)"
+    }
+  },
+  "task-05": {
+    "A": {
+      "ran": false,
+      "exit": null,
+      "ok": true,
+      "output": "visual (screenshot)"
+    },
+    "B": {
+      "ran": false,
+      "exit": null,
+      "ok": true,
+      "output": "visual (screenshot)"
+    }
+  },
+  "task-06": {
+    "A": {
+      "ran": false,
+      "exit": null,
+      "ok": true,
+      "output": "visual (screenshot)"
+    },
+    "B": {
+      "ran": false,
+      "exit": null,
+      "ok": true,
+      "output": "visual (screenshot)"
+    }
+  },
+  "task-07": {
+    "A": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "All slugify self-checks passed.\n"
+    },
+    "B": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "ok\n"
+    }
+  },
+  "task-08": {
+    "A": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "ok\n"
+    },
+    "B": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "All LRUCache self-checks passed.\n"
+    }
+  },
+  "task-09": {
+    "A": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "All self-checks passed.\n"
+    },
+    "B": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "all checks passed\n"
+    }
+  },
+  "task-10": {
+    "A": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "selfcheck passed\n"
+    },
+    "B": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "selfcheck: all tests passed\n"
+    }
+  },
+  "task-11": {
+    "A": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "All self-checks passed.\n"
+    },
+    "B": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "ok\n"
+    }
+  },
+  "task-12": {
+    "A": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "ok\n"
+    },
+    "B": {
+      "ran": true,
+      "exit": 0,
+      "ok": true,
+      "output": "All checks passed.\n"
+    }
+  }
+}

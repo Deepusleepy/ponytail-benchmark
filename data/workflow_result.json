@@ -1,0 +1,1174 @@
+{
+  "summary": "Benchmark ponytail skill: 12 tasks built with/without it (blind A/B), token-measured, then judged",
+  "agentCount": 48,
+  "logs": [
+    "task-01 built — baseline 5699 tok, ponytail 3120 tok",
+    "task-02 built — baseline 9154 tok, ponytail 3513 tok",
+    "task-03 built — baseline 6403 tok, ponytail 2954 tok",
+    "task-04 built — baseline 4395 tok, ponytail 2622 tok",
+    "task-05 built — baseline 5422 tok, ponytail 2789 tok",
+    "task-06 built — baseline 7663 tok, ponytail 4364 tok",
+    "task-07 built — baseline 1793 tok, ponytail 1006 tok",
+    "task-08 built — baseline 3800 tok, ponytail 1729 tok",
+    "task-09 built — baseline 3833 tok, ponytail 2849 tok",
+    "task-10 built — baseline 3989 tok, ponytail 1509 tok",
+    "task-11 built — baseline 2763 tok, ponytail 1338 tok",
+    "task-12 built — baseline 968 tok, ponytail 882 tok"
+  ],
+  "result": {
+    "builds": [
+      {
+        "id": "task-01",
+        "title": "Health & time JSON API",
+        "domain": "Backend",
+        "difficulty": "Easy",
+        "lang": "node",
+        "aIsBaseline": true,
+        "dirA": "./builds/task-01/A",
+        "dirB": "./builds/task-01/B",
+        "baselineDir": "./builds/task-01/A",
+        "ponytailDir": "./builds/task-01/B",
+        "baselineTokens": 5699,
+        "ponytailTokens": 3120,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-01/A/server.js"
+          ],
+          "primaryFile": "./builds/task-01/A/server.js",
+          "runCommand": "node server.js",
+          "notes": "Built-in http module only, no deps. Listens on port 3000; all responses set Content-Type application/json. Verified all 3 endpoints live (health 200, time 200, unknown 404). Query strings are stripped from path matching."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-01/B/server.js",
+            "./builds/task-01/B/check.js"
+          ],
+          "primaryFile": "./builds/task-01/B/server.js",
+          "runCommand": "node check.js",
+          "notes": "Built-in http only, no deps. server.js exports the server so check.js can drive it; check.js asserts all 3 routes, 404, and JSON content-type. Run `node server.js` to serve on :3000."
+        }
+      },
+      {
+        "id": "task-02",
+        "title": "In-memory Todo REST API",
+        "domain": "Backend",
+        "difficulty": "Medium",
+        "lang": "node",
+        "aIsBaseline": false,
+        "dirA": "./builds/task-02/A",
+        "dirB": "./builds/task-02/B",
+        "baselineDir": "./builds/task-02/B",
+        "ponytailDir": "./builds/task-02/A",
+        "baselineTokens": 9154,
+        "ponytailTokens": 3513,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-02/B/server.js"
+          ],
+          "primaryFile": "./builds/task-02/B/server.js",
+          "runCommand": "node server.js",
+          "notes": "Built-in http only, in-memory store on port 3000. All endpoints + validation (empty/missing title 400, invalid JSON 400, bad/missing id 400/404, 204 delete) smoke-tested green. Exports server for testing; emits 405 on unsupported methods."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-02/A/server.js",
+            "./builds/task-02/A/test.js"
+          ],
+          "primaryFile": "./builds/task-02/A/server.js",
+          "runCommand": "node test.js",
+          "notes": "Built-in http only, in-memory Map store. All endpoints/status codes + input validation covered; self-check passes. Skipped: persistence and auth (not requested). 1MB body cap noted via ponytail comment."
+        }
+      },
+      {
+        "id": "task-03",
+        "title": "Token-bucket rate limiter",
+        "domain": "Backend",
+        "difficulty": "Complex",
+        "lang": "node",
+        "aIsBaseline": true,
+        "dirA": "./builds/task-03/A",
+        "dirB": "./builds/task-03/B",
+        "baselineDir": "./builds/task-03/A",
+        "ponytailDir": "./builds/task-03/B",
+        "baselineTokens": 6403,
+        "ponytailTokens": 2954,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-03/A/limiter.js"
+          ],
+          "primaryFile": "./builds/task-03/A/limiter.js",
+          "runCommand": "node limiter.js",
+          "notes": "Built-in modules only (http, assert). Exports createRateLimiter factory (capacity, refillRate, keyGenerator, now, cleanupIntervalMs). Per-IP buckets, lazy time-based refill, 429 + Retry-After (ceil seconds) + JSON {\"error\":\"rate limited\"}. Self-check uses injectable clock for deterministic capacity/refill/per-IP assertions plus a real-server end-to-end (200,200,429). All checks pass, exit 0."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-03/B/limiter.js"
+          ],
+          "primaryFile": "./builds/task-03/B/limiter.js",
+          "runCommand": "node limiter.js",
+          "notes": "Single file, built-in modules only (assert for self-check). Lazy refill computed on access — no timers/cleanup. Skipped X-Forwarded-For (trusts socket IP; marked ponytail with upgrade path) and bucket eviction (add an LRU/TTL sweep if IP cardinality grows unbounded)."
+        }
+      },
+      {
+        "id": "task-04",
+        "title": "Responsive pricing section",
+        "domain": "Frontend",
+        "difficulty": "Easy",
+        "lang": "html",
+        "aIsBaseline": false,
+        "dirA": "./builds/task-04/A",
+        "dirB": "./builds/task-04/B",
+        "baselineDir": "./builds/task-04/B",
+        "ponytailDir": "./builds/task-04/A",
+        "baselineTokens": 4395,
+        "ponytailTokens": 2622,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-04/B/index.html"
+          ],
+          "primaryFile": "./builds/task-04/B/index.html",
+          "runCommand": "start index.html",
+          "notes": "Self-contained HTML, inline CSS only. 3 cards (Starter $9, Pro $29, Enterprise $99), each with name, price, 4 features, CTA. Pro is highlighted (dark gradient, scale, \"Recommended\" badge). CSS grid: 3 cols desktop, 1 col at <=900px with Pro reordered first."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-04/A/index.html"
+          ],
+          "primaryFile": "./builds/task-04/A/index.html",
+          "runCommand": "start index.html",
+          "notes": "Pure HTML+inline CSS, no JS/frameworks. CSS Grid handles 3-col to 1-col stacking at 720px. Pro card highlighted with border/glow/scale + badge. No test file: static markup is trivially verifiable by eye in a browser."
+        }
+      },
+      {
+        "id": "task-05",
+        "title": "Todo app with localStorage",
+        "domain": "Frontend",
+        "difficulty": "Medium",
+        "lang": "html",
+        "aIsBaseline": true,
+        "dirA": "./builds/task-05/A",
+        "dirB": "./builds/task-05/B",
+        "baselineDir": "./builds/task-05/A",
+        "ponytailDir": "./builds/task-05/B",
+        "baselineTokens": 5422,
+        "ponytailTokens": 2789,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-05/A/index.html"
+          ],
+          "primaryFile": "./builds/task-05/A/index.html",
+          "runCommand": "start index.html",
+          "notes": "Single self-contained index.html: inline CSS + vanilla JS, no external resources. Add/toggle (strike-through)/delete, All/Active/Completed filters, \"items left\" counter, Clear completed. Todos and active filter persist to localStorage (versioned keys, guarded JSON parse)."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-05/B/index.html"
+          ],
+          "primaryFile": "./builds/task-05/B/index.html",
+          "runCommand": "start index.html",
+          "notes": "Single file, no deps. textContent prevents HTML injection; storage load/save wrapped in try/catch. Skipped: edit-in-place and \"clear completed\" (not requested); add if needed."
+        }
+      },
+      {
+        "id": "task-06",
+        "title": "Sales dashboard (no chart lib)",
+        "domain": "Frontend",
+        "difficulty": "Complex",
+        "lang": "html",
+        "aIsBaseline": false,
+        "dirA": "./builds/task-06/A",
+        "dirB": "./builds/task-06/B",
+        "baselineDir": "./builds/task-06/B",
+        "ponytailDir": "./builds/task-06/A",
+        "baselineTokens": 7663,
+        "ponytailTokens": 4364,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-06/B/index.html"
+          ],
+          "primaryFile": "./builds/task-06/B/index.html",
+          "runCommand": "start index.html",
+          "notes": "Single self-contained index.html: inline CSS + vanilla JS, no libs/external resources. SVG bar chart (revenue) + SVG line chart w/ area (users), hand-drawn axes/gridlines/labels/tooltips. 3 KPI cards verified: total $298,800, avg users 1,417, best month May."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-06/A/index.html"
+          ],
+          "primaryFile": "./builds/task-06/A/index.html",
+          "runCommand": "start index.html",
+          "notes": "Single self-contained HTML, hand-drawn SVG bar + line charts, no libs. KPIs computed live (total $298,800 / avg 1,417 / best May). Hover tooltips via SVG <title>. Self-check verifies math + no external resources."
+        }
+      },
+      {
+        "id": "task-07",
+        "title": "slugify()",
+        "domain": "Algorithm",
+        "difficulty": "Easy",
+        "lang": "python",
+        "aIsBaseline": true,
+        "dirA": "./builds/task-07/A",
+        "dirB": "./builds/task-07/B",
+        "baselineDir": "./builds/task-07/A",
+        "ponytailDir": "./builds/task-07/B",
+        "baselineTokens": 1793,
+        "ponytailTokens": 1006,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-07/A/slugify.py"
+          ],
+          "primaryFile": "./builds/task-07/A/slugify.py",
+          "runCommand": "python slugify.py",
+          "notes": "Regex-based slugify: lowercase, [\\s_]+->-, strip non [a-z0-9-], collapse hyphens, trim. Self-checks cover normal, punctuation, digits, empty, whitespace-only, all-symbols. Verified exit 0."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-07/B/slugify.py"
+          ],
+          "primaryFile": "./builds/task-07/B/slugify.py",
+          "runCommand": "python slugify.py",
+          "notes": "stdlib re only; 4 subs match the spec order. Asserts cover normal/punctuation/empty/all-symbols. Exits 0."
+        }
+      },
+      {
+        "id": "task-08",
+        "title": "O(1) LRU cache",
+        "domain": "Algorithm",
+        "difficulty": "Medium",
+        "lang": "python",
+        "aIsBaseline": false,
+        "dirA": "./builds/task-08/A",
+        "dirB": "./builds/task-08/B",
+        "baselineDir": "./builds/task-08/B",
+        "ponytailDir": "./builds/task-08/A",
+        "baselineTokens": 3800,
+        "ponytailTokens": 1729,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-08/B/lru.py"
+          ],
+          "primaryFile": "./builds/task-08/B/lru.py",
+          "runCommand": "python lru.py",
+          "notes": "Dict + intrusive doubly linked list with sentinel head/tail gives O(1) get/put. get and put both refresh recency; eviction drops node before tail. 10 assert blocks cover eviction order, key updates, capacity limits, falsy values, and invalid capacity. Verified: exits 0."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-08/A/lru.py"
+          ],
+          "primaryFile": "./builds/task-08/A/lru.py",
+          "runCommand": "python lru.py",
+          "notes": "Used stdlib OrderedDict (move_to_end/popitem are O(1)) instead of hand-rolling a doubly linked list. Self-checks cover eviction order, get-as-use, key update, capacity limit, capacity-1, and missing keys. Verified: prints \"ok\", exits 0."
+        }
+      },
+      {
+        "id": "task-09",
+        "title": "Expression evaluator (no eval)",
+        "domain": "Algorithm",
+        "difficulty": "Complex",
+        "lang": "python",
+        "aIsBaseline": true,
+        "dirA": "./builds/task-09/A",
+        "dirB": "./builds/task-09/B",
+        "baselineDir": "./builds/task-09/A",
+        "ponytailDir": "./builds/task-09/B",
+        "baselineTokens": 3833,
+        "ponytailTokens": 2849,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-09/A/calc.py"
+          ],
+          "primaryFile": "./builds/task-09/A/calc.py",
+          "runCommand": "python calc.py",
+          "notes": "Recursive-descent parser (expr/term/factor/primary), no eval/exec. Handles precedence, associativity, unary +/-, decimals incl \".5\", whitespace. Raises CalcError on malformed input and div-by-zero. Verified: exit 0."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-09/B/calc.py"
+          ],
+          "primaryFile": "./builds/task-09/B/calc.py",
+          "runCommand": "python calc.py",
+          "notes": "Recursive-descent parser (regex tokenizer + 3 grammar levels), no eval/exec. Handles +-*/, parens, unary +/-, int/decimal, whitespace; raises CalcError on malformed input and div-by-zero. Self-checks cover precedence, left-assoc, parens, decimals, 10 error cases."
+        }
+      },
+      {
+        "id": "task-10",
+        "title": "CSV->JSON CLI",
+        "domain": "CLI / Data",
+        "difficulty": "Medium",
+        "lang": "python",
+        "aIsBaseline": false,
+        "dirA": "./builds/task-10/A",
+        "dirB": "./builds/task-10/B",
+        "baselineDir": "./builds/task-10/B",
+        "ponytailDir": "./builds/task-10/A",
+        "baselineTokens": 3989,
+        "ponytailTokens": 1509,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-10/B/csv2json.py"
+          ],
+          "primaryFile": "./builds/task-10/B/csv2json.py",
+          "runCommand": "python csv2json.py --selfcheck",
+          "notes": "Stdlib-only (argparse/csv/json/io/sys). Reads file arg or stdin; --pretty indents; --selfcheck runs asserts and exits 0. Missing/dir/OSError -> clear stderr msg + exit 1. Missing trailing fields normalized to \"\". Verified all paths."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-10/A/csv2json.py"
+          ],
+          "primaryFile": "./builds/task-10/A/csv2json.py",
+          "runCommand": "python csv2json.py --selfcheck",
+          "notes": "csv.DictReader + json.dump, no deps. File arg / stdin / --pretty / --selfcheck all covered. All values stay strings (CSV has no types) — fine for the spec."
+        }
+      },
+      {
+        "id": "task-11",
+        "title": "Sales aggregation toolkit",
+        "domain": "CLI / Data",
+        "difficulty": "Medium",
+        "lang": "python",
+        "aIsBaseline": true,
+        "dirA": "./builds/task-11/A",
+        "dirB": "./builds/task-11/B",
+        "baselineDir": "./builds/task-11/A",
+        "ponytailDir": "./builds/task-11/B",
+        "baselineTokens": 2763,
+        "ponytailTokens": 1338,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-11/A/sales.py"
+          ],
+          "primaryFile": "./builds/task-11/A/sales.py",
+          "runCommand": "python sales.py",
+          "notes": "Stdlib only (collections.defaultdict). All four functions implemented; top_products ties break alphabetically for determinism. Self-checks under __main__ verify totals, edge/empty cases, and cross-consistency; runs exit 0."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-11/B/sales.py"
+          ],
+          "primaryFile": "./builds/task-11/B/sales.py",
+          "runCommand": "python sales.py",
+          "notes": "Stdlib only (collections.defaultdict). Four functions + assert self-checks; prints \"ok\", exits 0. top_products ties broken by product name for determinism."
+        }
+      },
+      {
+        "id": "task-12",
+        "title": "Refactor over-engineered code",
+        "domain": "Refactor",
+        "difficulty": "Complex",
+        "lang": "python",
+        "aIsBaseline": false,
+        "dirA": "./builds/task-12/A",
+        "dirB": "./builds/task-12/B",
+        "baselineDir": "./builds/task-12/B",
+        "ponytailDir": "./builds/task-12/A",
+        "baselineTokens": 968,
+        "ponytailTokens": 882,
+        "baselineSummary": {
+          "filesCreated": [
+            "./builds/task-12/B/solution.py"
+          ],
+          "primaryFile": "./builds/task-12/B/solution.py",
+          "runCommand": "python solution.py",
+          "notes": "Stripped Strategy/Factory/Calculator boilerplate to two one-liner functions. Fixed average bug (range(len-1) dropped last element) by using sum(numbers)/len(numbers). Verified: exits 0."
+        },
+        "ponytailSummary": {
+          "filesCreated": [
+            "./builds/task-12/A/solution.py"
+          ],
+          "primaryFile": "./builds/task-12/A/solution.py",
+          "runCommand": "python solution.py",
+          "notes": "Bug fixed: average summed only len-1 elements (range(len-1)); now sum(numbers)/len. Dropped Strategy/Factory ceremony for two stdlib one-liners. Empty-list still raises ZeroDivisionError (matches original)."
+        }
+      }
+    ],
+    "judgments": [
+      {
+        "id": "task-01",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 8,
+              "robustness": 8
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 8,
+              "functionality": 8,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 8,
+              "robustness": 6
+            },
+            "bugs_A": [],
+            "bugs_B": [
+              "Routes by strict equality req.url === '/health' / '/time', so any query string (e.g. GET /health?x=1) bypasses the route and falls through to the 404 handler. Verified A handles this correctly; B does not strip the query string.",
+              "Stray/garbled comment artifact on line 18 ('// ponytail: export when required...') reduces polish."
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "tie",
+            "summary": "Both submissions fully satisfy the literal spec (correct routes, JSON bodies, application/json header on every response, port 3000, http-only) and I verified both run: B's self-check passes and A's endpoints return correct output. A edges ahead on robustness because it strips the query string before routing, so GET /health?x=1 correctly hits the health handler, whereas B compares req.url by strict equality and routes any query-string request to 404 (confirmed by reasoning and A's live probe). B counters with a useful check.js test harness, a DRY json() helper, and a require.main guard, but the query-string routing gap plus a garbled comment make it slightly less production-ready, so A wins overall and on production-readiness while instruction-following is a tie."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 7,
+              "robustness": 8
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 8,
+              "robustness": 7
+            },
+            "bugs_A": [
+              "No require.main === module guard: server.listen(3000) runs unconditionally at module load even when the file is required, so importing it (e.g. for testing) forces a port bind and side effect. Minor reusability/testability wart, not a spec violation."
+            ],
+            "bugs_B": [
+              "Routes via exact match req.url === '/health' (and '/time'), so a request with a query string like /health?x=1 falls through to 404. The spec does not require query handling, so not a strict violation, but less robust than stripping the query string."
+            ],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "tie",
+            "summary": "Both correctly implement the full spec with only the http module: /health, /time, 404 JSON, application/json on all responses, port 3000, and both pass node --check. A is slightly more robust at routing (strips the query string and guards undefined req.url) but lacks a require.main guard, so requiring it forces an immediate port bind. B has cleaner module hygiene (DRY json() helper, require.main === module guard so it is importable without side effects) and ships a self-check that I ran read-only and confirmed passes, at the cost of exact-match routing that would 404 on /health?x=1. The two roughly trade robustness for module hygiene; B edges ahead overall on production-readiness and maintainability-per-line thanks to the listen guard and verified self-check."
+          }
+        ]
+      },
+      {
+        "id": "task-02",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 8,
+              "readability": 8,
+              "functionality": 7,
+              "instruction_following": 9,
+              "production_readiness": 5,
+              "maintainability": 8,
+              "robustness": 4
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 8,
+              "robustness": 9
+            },
+            "bugs_A": [
+              "SERVER-CRASHING DoS: POST /todos (or PUT) with JSON body `null` throws an uncaught TypeError at server.js:48 ('Cannot read properties of null (reading title)') because readJson returns the parsed null and the handler accesses body.title without verifying the body is an object. In an async handler this becomes an unhandled rejection that terminates the whole process. Verified by running it — exit 1, stack trace. A single malformed request takes down the server.",
+              "readJson does not validate that the parsed JSON is a plain object; primitives/arrays happen to survive (title becomes undefined -> 400) but null is fatal (see above).",
+              "Stored title is not trimmed (todo.title = body.title), so a title like ' x ' is persisted with surrounding whitespace even though whitespace-only is rejected — minor inconsistency.",
+              "Comment typo: 'ponytail: 1MB cap' should read 'payload'."
+            ],
+            "bugs_B": [
+              "server.listen(PORT) is called unconditionally at module load with no require.main === module guard, so importing the module for testing (or composition) always binds port 3000 and can throw EADDRINUSE. Not a spec violation but hurts testability.",
+              "No 405 vs the explicit error responses are fine; no functional bug found. (/todos/abc returns 400 rather than 404 — defensible interpretation, not a bug.)"
+            ],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "tie",
+            "summary": "Both implementations meet the full happy-path spec (verified by running each: correct endpoints, status codes, validation, and JSON), and both add nice extras like 405 handling and a 1MB body cap. The decisive difference is robustness: Submission A crashes the entire server process on a POST/PUT with JSON body `null` (uncaught TypeError at server.js:48 -> unhandled rejection -> process exit), a trivial remote DoS that I reproduced, whereas B explicitly rejects null/array/non-object bodies with a 400. A is otherwise marginally more elegant (Map store, clean 204, a require.main guard, and a bundled passing test suite), but B is the safer, more production-ready choice; A's only edge over B (testability via the listen guard) does not offset a server-killing bug. Instruction-following is a tie since both follow the literal spec equally well."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 7,
+              "instruction_following": 9,
+              "production_readiness": 6,
+              "maintainability": 8,
+              "robustness": 5
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 8,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 8,
+              "robustness": 9
+            },
+            "bugs_A": [
+              "Server-crashing bug: POST /todos (or PUT /todos/:id) with JSON body `null` throws an unhandled TypeError 'Cannot read properties of null (reading title)' at server.js:48 because the handler never checks the parsed body is a non-null object. The throw is inside an async handler with no try/catch around the property access, so the process terminates — a single malformed request is a remote DoS. Verified by reproduction.",
+              "POST stores body.title without trimming (e.g. '  hi  ' is stored verbatim), unlike its PUT-side check which only validates after trim; minor inconsistency but not a spec violation."
+            ],
+            "bugs_B": [],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "tie",
+            "summary": "Both faithfully implement the full spec (http-only, in-memory, port 3000, correct 200/201/204/404/400 codes and JSON), verified empirically — A via its bundled test suite (all checks passed) and B via curl across every endpoint. The decisive difference is robustness: A never validates that the parsed JSON body is a non-null object, so a POST/PUT with body `null` throws an unhandled TypeError inside the async handler and crashes the entire server (reproduced), whereas B explicitly rejects null/array/non-object bodies with 400 and stays alive. A is marginally more elegant (Map for O(1), a require.main guard, and a genuine test file is a nice maintainability plus), but a remote crash-on-malformed-input outweighs that, making B the more correct and production-ready submission; instruction-following is a tie since both cover the literal requirements equally well."
+          }
+        ]
+      },
+      {
+        "id": "task-03",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 6,
+              "maintainability": 7,
+              "robustness": 6
+            },
+            "bugs_A": [],
+            "bugs_B": [
+              "No bucket cleanup/eviction: the per-IP Map grows unbounded as distinct client IPs arrive, a memory-leak / DoS vector in production (A mitigates this with an unref'd GC timer + .stop()).",
+              "Clock is not injectable (uses Date.now() directly), so the 'refills over time' self-check (test 3) relies on a real 120ms setTimeout, making it slower and slightly timing-dependent; an assertion failure there throws asynchronously rather than producing a clean synchronous failure.",
+              "Minor: no handle to inspect buckets or stop the limiter; less testable/operable than A."
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "tie",
+            "summary": "Both files are single, built-in-only Node modules that correctly implement a per-IP token-bucket limiter, return 429 with Retry-After and {\"error\":\"rate limited\"}, export the factory, and pass their self-checks (verified by running both). A is the stronger submission: it uses an injectable clock for deterministic time-based tests, garbage-collects idle buckets via an unref'd timer with a .stop() handle, exposes internals for testability, clamps Retry-After to >=1, guards against backwards clocks, and includes a real end-to-end http server test. B is admirably concise and idiomatic (writeHead, clean refill math) and is functionally correct, but it never evicts buckets (unbounded memory growth across distinct IPs) and its refill test depends on a real setTimeout, making it less production-ready and robust. Instruction-following is a tie since both satisfy every explicit spec requirement."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 6,
+              "maintainability": 7,
+              "robustness": 6
+            },
+            "bugs_A": [],
+            "bugs_B": [
+              "No bucket eviction/cleanup: the buckets Map grows unbounded as new client IPs appear, a real memory/DoS concern for a rate limiter exposed to arbitrary IPs.",
+              "Refill self-check relies on a real 120ms setTimeout (wall-clock), so it is timing-dependent and could flake under load; not deterministic like a fake-clock approach.",
+              "No injectable clock, so time-based behavior can only be tested via real delays."
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "A",
+            "summary": "Both files are correct, single-file, built-in-only, and pass their own self-checks (429 + Retry-After + JSON, per-IP buckets, refill over time). A is more complete and production-minded: injectable clock for deterministic tests, unref'd periodic bucket cleanup to bound memory, sensible defaults, .stop()/.buckets introspection, and a fuller self-check that even includes a real end-to-end http server round-trip. B is admirably lean and readable (uses writeHead, ~1/3 the size) but leaks memory with no bucket eviction under IP churn, has no injectable clock, and uses a wall-clock setTimeout for its refill assertion (mildly flaky). B's brevity is a genuine virtue, but A's extra robustness here is warranted rather than bloat for a rate limiter, so A wins overall."
+          }
+        ]
+      },
+      {
+        "id": "task-04",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 8,
+              "robustness": 8
+            },
+            "B": {
+              "code_quality": 9,
+              "readability": 8,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "bugs_A": [],
+            "bugs_B": [],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "tie",
+            "summary": "Both submissions are fully spec-compliant single-file index.html files: inline CSS only, exactly 3 cards (Starter $9, Pro $29, Enterprise $99), 4 features each, CTA buttons, a highlighted middle Pro card, and a grid that goes 3 columns on desktop and 1 column on narrow screens — I found no bugs in either. A is more concise (3.8KB), uses a clean dark theme with CSS ::before checkmarks, and correctly resets the featured scale on mobile to avoid clipping. B is more polished and production-ready (8.7KB): it adds taglines, an eyebrow, accessible decorative checkmarks (aria-hidden), a distinct \"Contact Sales\" Enterprise CTA, hover-lift interactions, and a thoughtful mobile UX touch of reordering the Pro card to the top via order:-1 — its richer design and better-organized BEM-style class structure give it the edge."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 8,
+              "robustness": 7
+            },
+            "B": {
+              "code_quality": 9,
+              "readability": 8,
+              "functionality": 9,
+              "instruction_following": 8,
+              "production_readiness": 9,
+              "maintainability": 8,
+              "robustness": 9
+            },
+            "bugs_A": [
+              "Misleading CSS comment (line 27) claims responsiveness is achieved 'via minmax + auto-fit', but the code actually uses repeat(3, 1fr) plus a max-width media query - stale/inaccurate documentation."
+            ],
+            "bugs_B": [
+              "role=\"button\" applied to anchor (<a>) CTAs is semantically redundant/slightly off (anchors are links, not buttons); harmless but not strictly correct.",
+              "Adds unrequested content (eyebrow label, per-card taglines) beyond the minimal spec - mild scope creep, though coherent."
+            ],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "A",
+            "summary": "Both are valid single-file, inline-CSS solutions that fully meet the spec: exactly 3 cards (Starter $9, Pro $29, Enterprise $99/mo), 4 features each, a CTA per card, a highlighted \"Recommended\" Pro card, and 3-column-to-1-column responsiveness - no functional bugs in either. A is the leaner, higher-value-per-line submission (136 lines vs 313) and hews closest to the minimal request, but it carries a misleading CSS comment about its own responsive technique. B is more production-polished and robust - absolute-positioned badge, mobile reorder (order:-1 surfaces Pro on top), hover lift, accessible check icons - at the cost of modest unrequested bloat (taglines, eyebrow) and a semantically loose role=\"button\" on links. A wins on strict instruction-following/minimalism; B wins overall and on production-readiness for its genuine UX/accessibility polish without being broken."
+          }
+        ]
+      },
+      {
+        "id": "task-05",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 9,
+              "readability": 8,
+              "functionality": 9,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 8,
+              "instruction_following": 9,
+              "production_readiness": 6,
+              "maintainability": 7,
+              "robustness": 5
+            },
+            "bugs_A": [],
+            "bugs_B": [
+              "load() does `JSON.parse(...) || []` with no Array.isArray validation. If localStorage[\"todos.v1\"] holds valid non-array JSON (e.g. a string, number, boolean, or object from a key collision or tampering), todos becomes a non-array and the first todos.filter()/todos.push() throws ('todos.filter is not a function'), breaking the entire app on load — verified by execution.",
+              "Loaded todos are not sanitized: records missing an `id` (e.g. data from an older/other source) get id=undefined; deleting one such item (filter on x.id !== t.id) deletes all id-less items at once. No coercion of `done` or validation of `text`.",
+              "Filter selection is not persisted across reload (always resets to 'all'). Not a strict spec violation since the spec only requires persisting todos, but inferior to A's persisted filter."
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "A",
+            "summary": "Both fully implement the spec with clean, XSS-safe UIs, but A is notably more production-ready: its load() validates Array.isArray, sanitizes/normalizes each record, and regenerates missing ids, whereas B's `JSON.parse(...) || []` crashes the whole app if storage holds valid non-array JSON (verified by execution) and mishandles id-less records on delete. A also adds value beyond spec (persisted filter, Clear-completed with disabled state, filter-aware empty states, richer aria labels). B is more concise and arguably slightly more readable, but trades away robustness and persistence of the filter. A is the clear overall winner."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 9,
+              "readability": 8,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 8,
+              "robustness": 9
+            },
+            "B": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 9,
+              "robustness": 6
+            },
+            "bugs_A": [
+              "No functional bugs vs spec. Minor UX: delete buttons are opacity:0 until row :hover, so they are undiscoverable/unusable on touch devices (no hover) without a tap-reveal fallback."
+            ],
+            "bugs_B": [
+              "Robustness gap in load(): JSON.parse(...) || [] only guards null/throw. If localStorage holds valid-but-non-array JSON (e.g. a number or object), load() returns it and the subsequent todos.filter(...) in render() throws, breaking the app on load. A validates Array.isArray and item shape; B does not.",
+              "Filter selection is not persisted across reloads (always resets to 'all'). Spec only requires todos to persist, so this is compliant, but it is a usability gap relative to A."
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "tie",
+            "summary": "Both are single-file, framework-free, XSS-safe (textContent) Todo apps that fully satisfy the core spec (add, toggle with strike-through, delete, All/Active/Completed filters, remaining-active counter, localStorage persistence) and both pass node --check. B is admirably concise and readable (5KB of clean ES6) and adds aria-pressed for filter state, but its load() does not validate the parsed value, so a corrupt non-array localStorage entry would throw and break render. A is larger but more defensive: it validates and normalizes stored data, wraps every storage call in try/catch, persists the filter, gives contextual empty states, and adds a (modest, reasonable) clear-completed control; its only real weakness is hover-only delete buttons (poor on touch). A edges out B overall and on production-readiness on robustness grounds, with instruction-following a tie since both meet every required feature."
+          }
+        ]
+      },
+      {
+        "id": "task-06",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 7,
+              "readability": 8,
+              "functionality": 7,
+              "instruction_following": 8,
+              "production_readiness": 6,
+              "maintainability": 7,
+              "robustness": 6
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 8,
+              "functionality": 8,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 8,
+              "robustness": 7
+            },
+            "bugs_A": [
+              "Bar chart tooltips are non-functional: each <title> is appended to the SVG root as a sibling of the <rect> (lines 139-140) instead of as a child of the rect, so hovering a bar produces no tooltip. (The line chart tooltips ARE nested correctly, so only the bar chart is affected.)",
+              "No responsive layout for charts on narrow screens beyond the auto-fit grid; chart panels use minmax(380px,1fr) which can overflow on very small viewports (minor)."
+            ],
+            "bugs_B": [
+              "Bar-chart y-axis scaling is loose: niceMax(61000) rounds the revenue axis ceiling up to 100000 (since 6.1 > 5 jumps to the next power of ten), so the tallest bar fills only ~61% of the plot, leaving large dead space and weaker month-to-month visual contrast. Functionally correct but a visibly suboptimal chart vs A's 70000 ceiling (~87% fill)."
+            ],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "B",
+            "summary": "Both are self-contained, library-free dashboards that embed the exact dataset, render all three required pieces, compute KPIs correctly (total $298,800, avg users 1,417, best month May), and pass node --check. A is more compact but has a real interaction bug: its bar-chart <title> tooltips are appended as siblings of the SVG root instead of children of the rects, so bar hovers show nothing; it also has a plainer UI. B is more polished and production-ready (responsive media query, value labels, area-fill gradient, strict mode, safe DOM construction, accessible aria-labels) with correctly nested tooltips, though its niceMax over-rounds the revenue axis to 100000 leaving the tallest bar at only ~61% height. The cosmetic axis weakness in B is outweighed by the functional tooltip bug and weaker presentation in A, making B the stronger submission."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 8,
+              "robustness": 7
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 8,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 9,
+              "maintainability": 8,
+              "robustness": 8
+            },
+            "bugs_A": [],
+            "bugs_B": [],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "tie",
+            "summary": "Both are single self-contained index.html files with inline CSS, no libraries, the embedded dataset, correct KPIs (total $298,800; avg 1,250 users; best month May), an SVG bar chart for revenue, and an SVG line chart for users — both pass node --check and are bug-free. A is leaner and more elegant (shared el/yAxis helpers, IIFEs, ~6KB) with tooltips, but its charts omit an x-axis baseline and value labels, so it reads as a solid but plainer dashboard. B (~12KB) adds gridlines, axis baselines, on-bar/on-dot value labels, gradient fills, an area under the line, hover states, a responsive media query, and a better-bounded line y-axis, plus slightly more defensive formatters/niceMax — making it the more complete and production-ready dashboard. Instruction-following is a tie since both satisfy every explicit requirement; B edges out overall on polish and robustness while A wins on pure value-per-line simplicity."
+          }
+        ]
+      },
+      {
+        "id": "task-07",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 8
+            },
+            "B": {
+              "code_quality": 7,
+              "readability": 8,
+              "functionality": 10,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 7,
+              "robustness": 7
+            },
+            "bugs_A": [],
+            "bugs_B": [],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "A",
+            "summary": "Both implementations are functionally identical and correct: same regex pipeline (lowercase, [\\s_]+ -> hyphen, strip disallowed chars, collapse hyphens, strip leading/trailing), both pass their self-checks with exit 0, and both produce \"hello-world\" for the spec example and handle empty/all-symbol/edge inputs correctly. A is the stronger submission: it has a module docstring restating the rules, a function docstring with a doctest-style example, inline comments explaining each step, and a far more comprehensive self-check suite (~15 asserts covering punctuation-becomes-nothing vs separator, digit preservation, mixed/repeated separators, whitespace-only, all-symbols, and bare-hyphen inputs) plus a descriptive success message. B is a competent minimal version (9 asserts, terse \"ok\" output, no docstrings) and the spec explicitly asked for normal/punctuation/empty/all-symbols coverage which B does meet, but A's extra edge-case coverage and documentation make it more maintainable and production-ready. No bugs or spec violations found in either."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 8,
+              "functionality": 10,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 7,
+              "robustness": 8
+            },
+            "bugs_A": [],
+            "bugs_B": [],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "A",
+            "summary": "Both submissions implement the identical correct algorithm (lowercase, [\\s_]+ to hyphen, strip disallowed chars, collapse hyphens, trim) and both run cleanly exiting 0, so functionality is a genuine tie. A is the stronger submission: it adds a module docstring, a doctest-style function example, per-step explanatory comments, and a markedly broader self-check suite that covers all required categories (normal, punctuation, empty, all-symbols) plus whitespace-only, digit preservation, and all-hyphen edge cases with a descriptive pass message. B is commendably concise (21 lines) and fully correct with the minimum required checks, but its sparser tests and documentation make it slightly less maintainable; A's extra content is proportionate to a reusable utility rather than bloat, so A wins narrowly on instruction-following, maintainability, and production-readiness."
+          }
+        ]
+      },
+      {
+        "id": "task-08",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 8,
+              "readability": 8,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 7,
+              "robustness": 7
+            },
+            "B": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "bugs_A": [],
+            "bugs_B": [],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "B",
+            "summary": "Both submissions are functionally correct, satisfy all O(1) requirements, and exit 0 with passing self-checks. A is concise and elegant, leveraging OrderedDict (move_to_end/popitem are genuinely O(1)) and covers the required cases (eviction order, get-as-use, key updates, capacity limits, capacity-1, stored-None), though it reaches into the private `_d` in its tests and has a stray \"ponytail\" typo in a comment. B implements the canonical hand-rolled dict + intrusive doubly-linked list with sentinel head/tail, adds isinstance(int) capacity validation, len/contains/introspection helpers, and a notably more thorough self-check suite (explicit recency-ordering assertions, falsy values, invalid-capacity rejection) with cleaner type hints and docstrings, making it the stronger, more production-ready and demonstrative solution."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 9,
+              "robustness": 7
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 8,
+              "functionality": 9,
+              "instruction_following": 8,
+              "production_readiness": 8,
+              "maintainability": 7,
+              "robustness": 9
+            },
+            "bugs_A": [
+              "Tests reach into the private member c._d (e.g. assert len(c._d) <= 3), coupling tests to internals; minor but slightly fragile.",
+              "Stray/typo word 'ponytail' in the line-73 comment (likely meant 'caveat'); the comment is cosmetic and does not affect behavior."
+            ],
+            "bugs_B": [
+              "No functional bugs found. Minor: the invalid-capacity test (case 10) only catches ValueError, so the added TypeError path for non-int capacity is never exercised by the self-checks (tests only pass ints)."
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "tie",
+            "better_instruction_following": "A",
+            "summary": "Both are correct, O(1), and exit 0, covering eviction order, update-existing, get-as-use, and capacity limits. A solves it idiomatically with OrderedDict in 76 lines (very high value-per-line) and stays tightly on-spec, with only minor nits (tests poke private c._d, a stray 'ponytail' comment). B hand-rolls a doubly-linked list + dict (219 lines, ~3x) with sentinels, __slots__, type hints, extra introspection helpers, and stronger ordering-based assertions, making it more robust but noticeably over-engineered for the stated task and more surface to maintain. Given the task prized simplicity and faithful instruction-following, A edges it out overall while B is genuinely stronger on robustness/test depth; production-readiness is a tie."
+          }
+        ]
+      },
+      {
+        "id": "task-09",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 8,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 7,
+              "robustness": 7
+            },
+            "bugs_A": [
+              "Trailing/unexpected-token error messages report 'position N' where N is a token index, not a character offset (e.g. '2 ** 3' reports position 2), which is slightly misleading; functionally still raises CalcError correctly."
+            ],
+            "bugs_B": [
+              "Regex tokenizer greedily splits malformed numbers: '1.2.3' tokenizes as 1.2 and .3, so the error surfaces as the confusing 'unexpected token 0.3' instead of a clear malformed-number message (still raises CalcError, so not a correctness failure).",
+              "No non-string input guard: passing a non-str to evaluate() would raise a built-in TypeError from re.match rather than the project's CalcError (spec only guarantees str input, so minor).",
+              "Parser functions are defined as closures inside evaluate() and recreated on every call — minor inefficiency and slightly harder to reuse/test."
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "A",
+            "summary": "Both submissions are correct recursive-descent evaluators that avoid eval/exec, honor precedence and left-associativity, handle whitespace, unary +/-, leading-dot decimals, and division by zero; both pass their self-checks and every edge case I probed, exiting 0. A is the stronger submission: a dedicated tokenizer catches malformed numbers with accurate character positions and clear messages, it adds an explicit non-string type guard, separates tokenizer/parser/evaluate cleanly, and ships a far more comprehensive self-check suite. B is concise and correct but its regex tokenizer produces confusing error messages for malformed numbers like '1.2.3' ('unexpected token 0.3'), lacks a non-string guard, rebuilds its parser closures on every call, and has thinner test coverage, making A both more production-ready and better at following the spec's emphasis on clear errors and thorough self-checks."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "B": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 8,
+              "robustness": 7
+            },
+            "bugs_A": [],
+            "bugs_B": [
+              "Non-string input leaks a raw TypeError ('object of type int has no len()') from _tokenize instead of a clear CalcError; A guards this with isinstance. Spec only mandates string input, so minor.",
+              "Malformed numbers like '1.2.3' / '2..3' are tokenized as two adjacent numbers (1.2 then .3), producing a confusing 'unexpected token 0.3' error rather than a clear malformed-number message. Still raises CalcError (spec-compliant) but the message is misleading.",
+              "Minor: the '\\s*' prefix in the _TOKEN regex is dead weight since whitespace is already skipped by the manual isspace() loop before each match."
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "tie",
+            "summary": "Both are correct, eval-free recursive-descent evaluators that exit 0 on their self-checks and raise CalcError for all malformed inputs and division by zero, fully satisfying the spec. A edges ahead on production readiness and robustness: it has a standalone tokenizer with precise position-aware error messages (e.g. clear 'multiple dots' for '1.2.3'), validates non-string input, and ships notably broader self-checks (unary chains, '.5' decimals, tab/newline whitespace, 13 error cases). B is admirably concise and readable (half the size, great value-per-line) but leaks a raw TypeError on non-string input, gives a confusing error for malformed numbers, and carries a redundant '\\\\s*' in its regex. Instruction-following is a tie since both cover every required category; A wins overall on quality and robustness."
+          }
+        ]
+      },
+      {
+        "id": "task-10",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 7,
+              "instruction_following": 8,
+              "production_readiness": 6,
+              "maintainability": 7,
+              "robustness": 6
+            },
+            "B": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "bugs_A": [
+              "Rows with MORE fields than the header produce broken output: extras are collected under csv.DictReader's None restkey, and json.dumps coerces that None key to the literal string 'null', yielding e.g. {\"a\":\"1\",\"b\":\"2\",\"null\":[\"3\",\"4\"]} — a confusing/incorrect key with a list value mixed among string values.",
+              "Short rows (fewer fields than header) emit JSON null for missing values (e.g. {\"c\": null}) rather than a string, giving inconsistent value typing; minor/arguable but undocumented and untested."
+            ],
+            "bugs_B": [
+              "IsADirectoryError branch is effectively unreachable on Windows (passing a directory raises PermissionError/OSError there), but the generic OSError handler still yields a clean message and exit 1, so no functional impact.",
+              "The generic OSError message embeds the raw exception (e.g. '[Errno 13] Permission denied: ...'); slightly noisier than necessary but still clear."
+            ],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "B",
+            "summary": "Both submissions are clean, stdlib-only, and correct on the core spec (file/stdin input, --pretty, missing-file error with exit 1, passing --selfcheck). The deciding factor is edge-case robustness: A produces broken output on ragged rows — rows longer than the header serialize the DictReader None restkey as a literal \"null\" string key with a list value, and short rows yield JSON null. B explicitly normalizes missing values to \"\" and drops the None restkey (documented and tested), refactors into testable functions (csv_to_records/convert/read_input), and ships a far more comprehensive selfcheck (pretty vs compact round-trip, embedded newlines, short rows, unicode). B is more production-ready and follows the instructions more completely; A's only edge over B is brevity."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 8,
+              "readability": 9,
+              "functionality": 8,
+              "instruction_following": 9,
+              "production_readiness": 7,
+              "maintainability": 8,
+              "robustness": 6
+            },
+            "B": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "bugs_A": [
+              "Short rows produce JSON null values (e.g. {\"a\":\"1\",\"b\":\"2\",\"c\":null}) because DictReader fills missing fields with None and they are serialized as-is. Inconsistent with the otherwise string-typed values and arguably surprising for a CSV tool.",
+              "Rows with MORE fields than the header leak DictReader's restkey: extras are collected under the None key, which json.dumps coerces to the literal string key \"null\" mapping to a list (e.g. {\"a\":\"1\",\"b\":\"2\",\"null\":[\"3\"]}). Produces malformed/confusing output rather than dropping or handling extras."
+            ],
+            "bugs_B": [],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "tie",
+            "summary": "Both submissions are clean, stdlib-only, and correctly implement every required feature (file/stdin input, --pretty, --selfcheck exiting 0, missing-file error with non-zero exit), and both pass their own selfchecks. B edges ahead on robustness and production-readiness: it explicitly normalizes short rows to empty strings and drops DictReader's leaky None restkey, so output is always predictable string-valued JSON, plus it adds ensure_ascii=False unicode handling and richer selfcheck coverage (pretty/compact round-trips, quoted+newline fields, directory error case). A is more concise and very readable, but its short rows emit JSON null and its extra-field rows produce a malformed {\\\"null\\\":[\\\"3\\\"]} key, which is messy output a real user could hit. Instruction-following is a tie since both meet the exact spec; B wins overall on better edge-case handling without meaningful added bloat.\""
+          }
+        ]
+      },
+      {
+        "id": "task-11",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "B": {
+              "code_quality": 6,
+              "readability": 8,
+              "functionality": 8,
+              "instruction_following": 7,
+              "production_readiness": 5,
+              "maintainability": 6,
+              "robustness": 4
+            },
+            "bugs_A": [],
+            "bugs_B": [
+              "total_revenue does not coerce to float: returns int 0 for empty input and int when amounts are ints, violating the spec signature '-> float' (verified: type(total_revenue([])) is int).",
+              "Self-check assertions rely on exact floating-point equality (e.g. == 144.98, revenue_by_product == {...}). It passes for these specific values but is fragile; any value where binary float rounding differs would fail the asserts spuriously.",
+              "top_products has no guard for negative n, so top_products(records, -1) silently returns all-but-last via list slicing instead of [] or all (verified output: drops the last element). Latent surprising behavior.",
+              "Stray/unprofessional comment token 'ponytail:' left in top_products."
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "A",
+            "summary": "Both files run and exit 0 on the happy path, but A is materially stronger. A coerces all returns to float (matching the spec's '-> float' signature), guards negative n, tolerates non-string dates via str(), uses tolerance-based float assertions, and adds tie-break and internal-consistency checks; B returns int from total_revenue (spec violation), relies on brittle exact float-equality assertions, leaves top_products unguarded for negative n (silently drops the last element), and has a stray 'ponytail:' comment. B is more concise and readable, but A wins decisively on correctness, robustness, and production-readiness."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 9,
+              "maintainability": 9,
+              "robustness": 9
+            },
+            "B": {
+              "code_quality": 7,
+              "readability": 8,
+              "functionality": 8,
+              "instruction_following": 8,
+              "production_readiness": 6,
+              "maintainability": 7,
+              "robustness": 5
+            },
+            "bugs_A": [],
+            "bugs_B": [
+              "total_revenue([]) returns int 0, not float 0.0 — violates the '->float' return-type spec on the empty-input edge case",
+              "Self-checks use exact float equality (e.g. revenue_by_product == {'Widget':39.98,...} and top_products(...) == [('Widget',39.98)]); these pass only because the chosen 19.99+19.99 sums happen to round-trip exactly on CPython doubles — fragile and not robust to different data",
+              "top_products with negative n slices with [:n], so n=-1 silently returns all-but-last product instead of an empty list",
+              "Stray/garbled 'ponytail:' token at the start of the tie-break comment (line 18) — noise/artifact",
+              "Comment claims tie-break-by-name behavior but no self-check exercises a tie; revenue_by_product([]) and monthly_revenue([]) empty cases are untested"
+            ],
+            "overall_winner": "A",
+            "more_production_ready": "A",
+            "better_instruction_following": "A",
+            "summary": "Both files are stdlib-only, define all four required functions with correct signatures, and exit 0. A is more spec-faithful and robust: total_revenue always returns a float (including 0.0 for empty input, where B returns int 0, violating the '->float' contract), it coerces amounts/dates via float()/str() so it tolerates int/str inputs, handles negative n gracefully (returns []), and its asserts use tolerance-based float comparisons plus empty-list, tie-break, and internal-consistency checks. B is admirably concise and readable but relies on exact float == comparisons that pass only by luck for the chosen data, mishandles negative n via [:n] slicing, leaves a garbled 'ponytail:' comment, and tests fewer edge cases. A wins on correctness, robustness, and faithfulness with only a modest cost in line count."
+          }
+        ]
+      },
+      {
+        "id": "task-12",
+        "raw": [
+          {
+            "judge": "reviewer",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 8,
+              "maintainability": 9,
+              "robustness": 7
+            },
+            "B": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 10,
+              "instruction_following": 10,
+              "production_readiness": 8,
+              "maintainability": 9,
+              "robustness": 8
+            },
+            "bugs_A": [],
+            "bugs_B": [],
+            "overall_winner": "B",
+            "more_production_ready": "B",
+            "better_instruction_following": "tie",
+            "summary": "Both submissions are essentially identical and optimal: each reduces the over-engineered strategy/factory code to a two-line `add` and `average`, correctly fixing the original bug (the `range(len-1)` loop dropped the last element) by using `sum(numbers) / len(numbers)`. Both include the required asserts under `__main__` and exit 0 when run. The only distinguishing factor is test thoroughness: B includes one extra self-check (`average([2,4,6])==4`) covering a multi-element case beyond the required example, giving marginally stronger verification, so B edges ahead. Neither guards against an empty-list ZeroDivisionError, but that matches the spec and the original behavior, so it is not a real defect."
+          },
+          {
+            "judge": "lead",
+            "A": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 9,
+              "robustness": 7
+            },
+            "B": {
+              "code_quality": 9,
+              "readability": 9,
+              "functionality": 9,
+              "instruction_following": 9,
+              "production_readiness": 8,
+              "maintainability": 9,
+              "robustness": 8
+            },
+            "bugs_A": [],
+            "bugs_B": [],
+            "overall_winner": "tie",
+            "more_production_ready": "tie",
+            "better_instruction_following": "tie",
+            "summary": "Both submissions are functionally identical and exemplary: each strips the over-engineered strategy/factory boilerplate down to two one-line public functions (`add` returns `a+b`, `average` returns `sum(numbers)/len(numbers)`), correctly fixing the original average bug that looped to `len-1` and dropped the last element. Both place assert-based self-checks under `if __name__ == '__main__':` and exit 0 (verified by running both). The only differences are cosmetic: B has 5 assertions (including `average([10])` and `average([2,4,6])`) vs A's 4 (including a negative-number `add` case and `average([5])`), and a slightly more descriptive print message. Neither handles the empty-list ZeroDivisionError edge case, but the spec did not require it; the work is genuinely equal, so this is a tie."
+          }
+        ]
+      }
+    ]
+  }
+}
