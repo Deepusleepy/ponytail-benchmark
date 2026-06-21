@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Dashboard</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #1a2029;
+    --panel-2: #222a35;
+    --ink: #e6edf3;
+    --muted: #8b97a7;
+    --accent: #4f9dff;
+    --accent-2: #2ecc8f;
+    --grid: #2c3542;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    padding: 32px;
+  }
+  h1 { margin: 0 0 4px; font-size: 24px; }
+  .sub { color: var(--muted); margin: 0 0 28px; font-size: 14px; }
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--grid);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .card .label { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  .card .value { font-size: 30px; font-weight: 700; margin-top: 8px; }
+  .card .note { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 18px;
+  }
+  .chart-card { background: var(--panel); border: 1px solid var(--grid); border-radius: 12px; padding: 20px 22px; }
+  .chart-card h2 { font-size: 16px; margin: 0 0 16px; font-weight: 600; }
+  svg { width: 100%; height: auto; display: block; }
+  text { fill: var(--muted); font-size: 12px; }
+  .axis-line { stroke: var(--grid); stroke-width: 1; }
+</style>
+</head>
+<body>
+  <h1>Sales Dashboard</h1>
+  <p class="sub">Monthly performance — Jan to Jun</p>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="charts">
+    <div class="chart-card">
+      <h2>Monthly Revenue</h2>
+      <div id="bar"></div>
+    </div>
+    <div class="chart-card">
+      <h2>Monthly Users</h2>
+      <div id="line"></div>
+    </div>
+  </section>
+
+<script>
+const data = [
+  {"month":"Jan","revenue":42000,"users":1200},
+  {"month":"Feb","revenue":38500,"users":1100},
+  {"month":"Mar","revenue":51200,"users":1450},
+  {"month":"Apr","revenue":47800,"users":1380},
+  {"month":"May","revenue":61000,"users":1720},
+  {"month":"Jun","revenue":58300,"users":1650}
+];
+
+const fmtUSD = n => "$" + n.toLocaleString("en-US");
+const SVGNS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs = {}, text) => {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  return e;
+};
+
+// --- KPIs ---
+const totalRevenue = data.reduce((s, d) => s + d.revenue, 0);
+const avgUsers = Math.round(data.reduce((s, d) => s + d.users, 0) / data.length);
+const best = data.reduce((a, b) => (b.revenue > a.revenue ? b : a));
+
+const kpis = [
+  { label: "Total Revenue", value: fmtUSD(totalRevenue), note: `${data.length} months` },
+  { label: "Avg Monthly Users", value: avgUsers.toLocaleString("en-US"), note: "per month" },
+  { label: "Best Month", value: best.month, note: fmtUSD(best.revenue) },
+];
+document.getElementById("kpis").innerHTML = kpis.map(k =>
+  `<div class="card"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="note">${k.note}</div></div>`
+).join("");
+
+// --- shared chart geometry ---
+const W = 520, H = 280, M = { top: 16, right: 16, bottom: 32, left: 56 };
+const plotW = W - M.left - M.right;
+const plotH = H - M.top - M.bottom;
+const niceMax = v => { const p = Math.pow(10, Math.floor(Math.log10(v))); return Math.ceil(v / p) * p; };
+
+function makeSvg() {
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" });
+  return svg;
+}
+
+function yAxis(svg, max, ticks = 4, fmt = String) {
+  for (let i = 0; i <= ticks; i++) {
+    const v = (max / ticks) * i;
+    const y = M.top + plotH - (v / max) * plotH;
+    svg.appendChild(el("line", { x1: M.left, y1: y, x2: M.left + plotW, y2: y, class: "axis-line", opacity: i ? .5 : 1 }));
+    const t = el("text", { x: M.left - 8, y: y + 4, "text-anchor": "end" }, fmt(Math.round(v)));
+    svg.appendChild(t);
+  }
+}
+
+// --- Bar chart: revenue ---
+(function barChart() {
+  const svg = makeSvg();
+  svg.setAttribute("aria-label", "Bar chart of monthly revenue");
+  const max = niceMax(Math.max(...data.map(d => d.revenue)));
+  yAxis(svg, max, 4, v => "$" + (v / 1000) + "k");
+
+  const slot = plotW / data.length;
+  const bw = slot * 0.6;
+  data.forEach((d, i) => {
+    const h = (d.revenue / max) * plotH;
+    const x = M.left + i * slot + (slot - bw) / 2;
+    const y = M.top + plotH - h;
+    svg.appendChild(el("rect", { x, y, width: bw, height: h, rx: 4, fill: "var(--accent)" }));
+    svg.appendChild(el("title", {}, `${d.month}: ${fmtUSD(d.revenue)}`));
+    svg.appendChild(el("text", { x: x + bw / 2, y: M.top + plotH + 18, "text-anchor": "middle" }, d.month));
+  });
+  document.getElementById("bar").appendChild(svg);
+})();
+
+// --- Line chart: users ---
+(function lineChart() {
+  const svg = makeSvg();
+  svg.setAttribute("aria-label", "Line chart of monthly users");
+  const vals = data.map(d => d.users);
+  const max = niceMax(Math.max(...vals));
+  yAxis(svg, max, 4, v => v.toLocaleString("en-US"));
+
+  const slot = plotW / data.length;
+  const px = i => M.left + slot * i + slot / 2;
+  const py = v => M.top + plotH - (v / max) * plotH;
+
+  const pts = data.map((d, i) => `${px(i)},${py(d.users)}`).join(" ");
+  svg.appendChild(el("polyline", { points: pts, fill: "none", stroke: "var(--accent-2)", "stroke-width": 2.5, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+
+  data.forEach((d, i) => {
+    const cx = px(i), cy = py(d.users);
+    svg.appendChild(el("circle", { cx, cy, r: 4, fill: "var(--accent-2)", stroke: "var(--panel)", "stroke-width": 2 }));
+    const dot = el("circle", { cx, cy, r: 10, fill: "transparent" });
+    dot.appendChild(el("title", {}, `${d.month}: ${d.users.toLocaleString("en-US")} users`));
+    svg.appendChild(dot);
+    svg.appendChild(el("text", { x: cx, y: M.top + plotH + 18, "text-anchor": "middle" }, d.month));
+  });
+  document.getElementById("line").appendChild(svg);
+})();
+</script>
+</body>
+</html>
