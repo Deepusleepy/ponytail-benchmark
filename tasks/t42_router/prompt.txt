@@ -1,0 +1,1 @@
+I need routes that can capture a piece of the path, like the user id in /users/123, and hand that captured value to the handler so it can use it.

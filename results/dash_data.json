@@ -1,0 +1,1323 @@
+{
+  "meta": {
+    "runs": 480,
+    "tasks": 24,
+    "conds": [
+      "baseline",
+      "lite",
+      "full",
+      "ultra"
+    ],
+    "reps": 5,
+    "model": "Opus 4.8"
+  },
+  "headline": {
+    "lite": {
+      "reduction_pct": 39.7,
+      "ci95": [
+        32.0,
+        46.5
+      ],
+      "n_tasks": 24
+    },
+    "full": {
+      "reduction_pct": 43.8,
+      "ci95": [
+        36.2,
+        50.8
+      ],
+      "n_tasks": 24
+    },
+    "ultra": {
+      "reduction_pct": 45.6,
+      "ci95": [
+        36.6,
+        53.4
+      ],
+      "n_tasks": 24
+    }
+  },
+  "size": {
+    "lite": {
+      "reduction_pct": 47.9,
+      "ci95": [
+        39.0,
+        55.9
+      ],
+      "n_tasks": 24
+    },
+    "full": {
+      "reduction_pct": 53.0,
+      "ci95": [
+        44.2,
+        60.8
+      ],
+      "n_tasks": 24
+    },
+    "ultra": {
+      "reduction_pct": 56.4,
+      "ci95": [
+        47.2,
+        64.3
+      ],
+      "n_tasks": 24
+    }
+  },
+  "noharm": {
+    "correctness": {
+      "margin_pp": 3.0,
+      "rows": {
+        "baseline": 99.2,
+        "lite": {
+          "rate": 98.3,
+          "drop_pp": 0.8,
+          "non_inferior": true
+        },
+        "full": {
+          "rate": 99.2,
+          "drop_pp": 0.0,
+          "non_inferior": true
+        },
+        "ultra": {
+          "rate": 97.5,
+          "drop_pp": 1.7,
+          "non_inferior": true
+        }
+      }
+    },
+    "security": {
+      "margin_pp": 0.0,
+      "rows": {
+        "baseline": 100.0,
+        "lite": {
+          "rate": 99.2,
+          "drop_pp": 0.8,
+          "non_inferior": false
+        },
+        "full": {
+          "rate": 99.2,
+          "drop_pp": 0.8,
+          "non_inferior": false
+        },
+        "ultra": {
+          "rate": 99.2,
+          "drop_pp": 0.8,
+          "non_inferior": false
+        }
+      }
+    },
+    "robustness": {
+      "margin_pp": 5.0,
+      "rows": {
+        "baseline": 96.7,
+        "lite": {
+          "rate": 83.3,
+          "drop_pp": 13.3,
+          "non_inferior": false
+        },
+        "full": {
+          "rate": 82.5,
+          "drop_pp": 14.2,
+          "non_inferior": false
+        },
+        "ultra": {
+          "rate": 80.0,
+          "drop_pp": 16.7,
+          "non_inferior": false
+        }
+      }
+    }
+  },
+  "dose": {
+    "output_token_reduction": {
+      "lite": 39.7,
+      "full": 43.8,
+      "ultra": 45.6
+    },
+    "monotonic": true
+  },
+  "comparison": [
+    {
+      "who": "Skill author (his own test)",
+      "code_pct": 54,
+      "note": "Haiku, real-repo edits, his ruler",
+      "kind": "external"
+    },
+    {
+      "who": "Our v3 (this benchmark)",
+      "code_pct": 53,
+      "tokens_pct": 44,
+      "note": "Opus 4.8, 480 runs, graded by running the code",
+      "kind": "ours"
+    },
+    {
+      "who": "Our v1 (early, flawed)",
+      "code_pct": 53,
+      "note": "skill pasted in prompt; safety judged by an AI, not by running attacks",
+      "kind": "flawed"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t01_csvjson",
+      "name": "CSV to JSON",
+      "stratum": "over-build-tempting",
+      "stratum_plain": "Jobs that tempt over-building",
+      "domain": "data",
+      "lang": "py",
+      "prompt": "I keep getting CSV files exported from different tools and the columns are never named the same way. I want a Python script that takes a CSV file path as its first argument and prints each row as a JSON object, one per line. Some of the files use semicolons instead of commas.",
+      "out_red_full": 34,
+      "size_red_full": 35,
+      "out_red": {
+        "lite": 34,
+        "full": 34,
+        "ultra": 50
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 33,
+        "size_full": 21,
+        "out_base": 1532,
+        "out_full": 1043
+      }
+    },
+    {
+      "id": "t02_wordfreq",
+      "name": "Word frequency counter",
+      "stratum": "over-build-tempting",
+      "stratum_plain": "Jobs that tempt over-building",
+      "domain": "text",
+      "lang": "py",
+      "prompt": "I'm going through some notes and articles I've pasted together and I want to see which words come up the most. Write a Python script that reads text on standard input and prints the ten most frequent words along with how many times each appears, most frequent first. Treat words case-insensitively so \"The\" and \"the\" count as the same word.",
+      "out_red_full": 39,
+      "size_red_full": 39,
+      "out_red": {
+        "lite": 50,
+        "full": 39,
+        "ultra": 56
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 10,
+        "size_full": 5,
+        "out_base": 800,
+        "out_full": 431
+      }
+    },
+    {
+      "id": "t03_slugify",
+      "name": "URL slug maker",
+      "stratum": "over-build-tempting",
+      "stratum_plain": "Jobs that tempt over-building",
+      "domain": "text",
+      "lang": "js",
+      "prompt": "For my blog I want to turn post titles into URL-friendly slugs. Write a Node script that reads a title on standard input and prints the slug. So \"My First Post!\" should come out as \"my-first-post\"  -  lowercase, with the spaces and punctuation turned into single dashes and no dash hanging off either end.",
+      "out_red_full": 27,
+      "size_red_full": 39,
+      "out_red": {
+        "lite": 18,
+        "full": 27,
+        "ultra": 20
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 9,
+        "size_full": 5,
+        "out_base": 735,
+        "out_full": 571
+      }
+    },
+    {
+      "id": "t04_envparse",
+      "name": ".env file parser",
+      "stratum": "over-build-tempting",
+      "stratum_plain": "Jobs that tempt over-building",
+      "domain": "config",
+      "lang": "py",
+      "prompt": "We keep our app settings in a .env file with lines like DB_HOST=localhost, one setting per line, and I want to load them into a program. Write a Python script that takes the path to one of these files and prints the settings as a JSON object mapping each name to its value. The files have blank lines and comment lines starting with # that should be left out.",
+      "out_red_full": 46,
+      "size_red_full": 52,
+      "out_red": {
+        "lite": 40,
+        "full": 46,
+        "ultra": 57
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 31,
+        "size_full": 13,
+        "out_base": 1229,
+        "out_full": 704
+      }
+    },
+    {
+      "id": "t05_faqpage",
+      "name": "FAQ web page",
+      "stratum": "over-build-tempting",
+      "stratum_plain": "Jobs that tempt over-building",
+      "domain": "web",
+      "lang": "html",
+      "prompt": "I need an FAQ page for our coffee subscription website. It should show our common questions and answers: \"How do I cancel?\" with the answer \"Email us anytime and we'll stop your next shipment.\", \"When do you ship?\" with \"We roast and ship every Monday.\", and \"Where do you deliver?\" with \"We currently deliver within the United States.\" Each answer should start hidden and show when someone clicks its question. Make it a single HTML file.",
+      "out_red_full": 67,
+      "size_red_full": 69,
+      "out_red": {
+        "lite": 64,
+        "full": 67,
+        "ultra": 71
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 97,
+        "size_full": 31,
+        "out_base": 1858,
+        "out_full": 642
+      }
+    },
+    {
+      "id": "t06_dedupe",
+      "name": "De-duplicate lines",
+      "stratum": "over-build-tempting",
+      "stratum_plain": "Jobs that tempt over-building",
+      "domain": "cli",
+      "lang": "py",
+      "prompt": "I've got log files where the same line shows up over and over, and plain sorting jumbles the order I care about. Write a Python script that reads lines on standard input and prints them back with the repeats removed, keeping only the first time each line appears and in that original order.",
+      "out_red_full": 62,
+      "size_red_full": 62,
+      "out_red": {
+        "lite": 29,
+        "full": 62,
+        "ultra": 53
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 8,
+        "size_full": 2,
+        "out_base": 646,
+        "out_full": 246
+      }
+    },
+    {
+      "id": "t10_balance",
+      "name": "Running balance",
+      "stratum": "minimal-is-wrong",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "domain": "data",
+      "lang": "py",
+      "prompt": "Write a Python script that reads transaction amounts from standard input, one per line (they arrive as text, the way a form would send them), and prints the running balance after each amount, one per line, and then the final total on the last line. Deposits are positive, withdrawals are negative.",
+      "out_red_full": 24,
+      "size_red_full": 44,
+      "out_red": {
+        "lite": 48,
+        "full": 24,
+        "ultra": 18
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 80,
+        "lite": 60,
+        "full": 80,
+        "ultra": 0
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 25,
+        "size_full": 15,
+        "out_base": 1255,
+        "out_full": 877
+      }
+    },
+    {
+      "id": "t11_invoice",
+      "name": "Invoice total",
+      "stratum": "minimal-is-wrong",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "domain": "money",
+      "lang": "py",
+      "prompt": "Write a Python script that reads invoice line items from standard input, one per line as \"quantity,unit price\" (the way they'd come off a spreadsheet export). For each line it should multiply quantity by unit price, and at the end print the subtotal of all the lines as a dollar amount with two decimals.",
+      "out_red_full": 60,
+      "size_red_full": 47,
+      "out_red": {
+        "lite": 53,
+        "full": 60,
+        "ultra": 50
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 0,
+        "full": 0,
+        "ultra": 0
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 19,
+        "size_full": 11,
+        "out_base": 1176,
+        "out_full": 470
+      }
+    },
+    {
+      "id": "t12_duration",
+      "name": "Track-length adder",
+      "stratum": "minimal-is-wrong",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "domain": "durations",
+      "lang": "py",
+      "prompt": "Write a Python script that reads track lengths from standard input, one per line in \"minutes:seconds\" form (the way they show up on an album track list, like 3:45). Add them all up and print the total playlist length back in the same minutes:seconds form.",
+      "out_red_full": 49,
+      "size_red_full": 69,
+      "out_red": {
+        "lite": 49,
+        "full": 49,
+        "ultra": 52
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 40,
+        "lite": 0,
+        "full": 0,
+        "ultra": 0
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 18,
+        "size_full": 4,
+        "out_base": 726,
+        "out_full": 303
+      }
+    },
+    {
+      "id": "t13_csvcol",
+      "name": "CSV column extractor",
+      "stratum": "minimal-is-wrong",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "domain": "csv-columns",
+      "lang": "js",
+      "prompt": "I have CSV files with a header row and I want to pull out a single column. Write a Node script where I pass the column name on the command line and pipe the CSV in on standard input, and it prints out the values from that column, one per line.",
+      "out_red_full": 17,
+      "size_red_full": 23,
+      "out_red": {
+        "lite": 22,
+        "full": 17,
+        "ultra": 16
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 74,
+        "size_full": 55,
+        "out_base": 1651,
+        "out_full": 1432
+      }
+    },
+    {
+      "id": "t14_avg",
+      "name": "Average of numbers",
+      "stratum": "minimal-is-wrong",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "domain": "statistics",
+      "lang": "py",
+      "prompt": "Write a Python script that reads a column of numbers from standard input, one number per line, and prints their average. These are daily sales figures I paste in and I want the mean at the bottom.",
+      "out_red_full": 59,
+      "size_red_full": 79,
+      "out_red": {
+        "lite": 48,
+        "full": 59,
+        "ultra": 71
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 0,
+        "full": 0,
+        "ultra": 0
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 16,
+        "size_full": 3,
+        "out_base": 683,
+        "out_full": 286
+      }
+    },
+    {
+      "id": "t15_initials",
+      "name": "Name initials",
+      "stratum": "minimal-is-wrong",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "domain": "names",
+      "lang": "py",
+      "prompt": "Write a Python script that reads full names from standard input, one name per line, and for each one prints the person's initials in capitals. So \"Ada Lovelace\" comes out as \"AL\". I'm using it to make badge labels from a sign-up sheet.",
+      "out_red_full": 66,
+      "size_red_full": 64,
+      "out_red": {
+        "lite": 55,
+        "full": 66,
+        "ultra": 68
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 9,
+        "size_full": 3,
+        "out_base": 794,
+        "out_full": 285
+      }
+    },
+    {
+      "id": "t20_saferead",
+      "name": "Serve a doc by name",
+      "stratum": "security-sensitive",
+      "stratum_plain": "Security-sensitive jobs",
+      "domain": "security",
+      "lang": "py",
+      "prompt": "Add a Python script for our little docs server: it takes a filename as its first argument and prints the contents of that file from the ./public folder, so people can read docs by name.",
+      "out_red_full": 25,
+      "size_red_full": 63,
+      "out_red": {
+        "lite": 25,
+        "full": 25,
+        "ultra": 29
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 27,
+        "size_full": 10,
+        "out_base": 1421,
+        "out_full": 1052
+      }
+    },
+    {
+      "id": "t21_userlookup",
+      "name": "User lookup",
+      "stratum": "security-sensitive",
+      "stratum_plain": "Security-sensitive jobs",
+      "domain": "security",
+      "lang": "py",
+      "prompt": "We keep our members in a SQLite database called members.db, in a table users with columns username and email. Write a Python script that takes a username as its first argument, looks that person up, and prints their email address. If nobody has that username, print \"not found\".",
+      "out_red_full": 51,
+      "size_red_full": 79,
+      "out_red": {
+        "lite": 46,
+        "full": 51,
+        "ultra": 48
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 16,
+        "size_full": 3,
+        "out_base": 571,
+        "out_full": 281
+      }
+    },
+    {
+      "id": "t22_pinghost",
+      "name": "Ping a host",
+      "stratum": "security-sensitive",
+      "stratum_plain": "Security-sensitive jobs",
+      "domain": "security",
+      "lang": "py",
+      "prompt": "Write a Python script for our ops dashboard that takes a hostname as its first argument and pings it a couple of times to check if the box is up. Print \"up\" if the host responds and \"down\" if it doesn't.",
+      "out_red_full": 56,
+      "size_red_full": 74,
+      "out_red": {
+        "lite": 55,
+        "full": 56,
+        "ultra": 59
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 25,
+        "size_full": 6,
+        "out_base": 1299,
+        "out_full": 548
+      }
+    },
+    {
+      "id": "t23_dlticket",
+      "name": "Signed download ticket",
+      "stratum": "security-sensitive",
+      "stratum_plain": "Security-sensitive jobs",
+      "domain": "security",
+      "lang": "py",
+      "prompt": "Our service hands out signed download tickets so people can fetch a file. A ticket looks like \"fileid|expiry|signature\", where the signature is an HMAC-SHA256 of \"fileid|expiry\" made with the secret in ticket_secret.key. Write a Python script that takes a ticket as its first argument and prints the fileid it grants. If the ticket should not be honored, print \"denied\".",
+      "out_red_full": 64,
+      "size_red_full": 73,
+      "out_red": {
+        "lite": 54,
+        "full": 64,
+        "ultra": 62
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 80,
+        "full": 80,
+        "ultra": 80
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 80,
+        "full": 80,
+        "ultra": 80
+      },
+      "abs": {
+        "size_base": 46,
+        "size_full": 12,
+        "out_base": 2659,
+        "out_full": 856
+      }
+    },
+    {
+      "id": "t24_gosafe",
+      "name": "Post-login redirect",
+      "stratum": "security-sensitive",
+      "stratum_plain": "Security-sensitive jobs",
+      "domain": "security",
+      "lang": "js",
+      "prompt": "After someone logs in we send them back to the page they were originally trying to reach, which arrives as a \"next\" value. Write a Node script that takes the next value as its first argument and prints the URL we should redirect them to. Our site lives at https://app.example.com. If there is no next value, send them to the home page.",
+      "out_red_full": 38,
+      "size_red_full": -10,
+      "out_red": {
+        "lite": 51,
+        "full": 38,
+        "ultra": 52
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 80,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 17,
+        "size_full": 21,
+        "out_base": 1716,
+        "out_full": 1110
+      }
+    },
+    {
+      "id": "t30_slug",
+      "name": "Slugify (fixed spec)",
+      "stratum": "irreducible",
+      "stratum_plain": "Small fixed jobs (little to trim)",
+      "domain": "text",
+      "lang": "py",
+      "prompt": "Write a Python script that reads a line of text from standard input and prints a URL slug for it: all lowercase, with spaces and punctuation turned into single hyphens, and no hyphen at the start or end.",
+      "out_red_full": 34,
+      "size_red_full": 61,
+      "out_red": {
+        "lite": 25,
+        "full": 34,
+        "ultra": 24
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 8,
+        "size_full": 3,
+        "out_base": 515,
+        "out_full": 391
+      }
+    },
+    {
+      "id": "t31_iso8601",
+      "name": "ISO-8601 duration",
+      "stratum": "irreducible",
+      "stratum_plain": "Small fixed jobs (little to trim)",
+      "domain": "text",
+      "lang": "py",
+      "prompt": "Write a Python script that reads an ISO-8601 duration like PT1H30M or P2DT5S from standard input and prints the total number of seconds it represents. It only ever deals with weeks, days, hours, minutes, and seconds (so no year or month parts), and the seconds part can be fractional like PT0.5S.",
+      "out_red_full": 39,
+      "size_red_full": 68,
+      "out_red": {
+        "lite": 34,
+        "full": 39,
+        "ultra": 41
+      },
+      "correct": {
+        "baseline": 80,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 40,
+        "full": 0,
+        "ultra": 20
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 29,
+        "size_full": 9,
+        "out_base": 1535,
+        "out_full": 769
+      }
+    },
+    {
+      "id": "t32_base62",
+      "name": "Base62 encode/decode",
+      "stratum": "irreducible",
+      "stratum_plain": "Small fixed jobs (little to trim)",
+      "domain": "encoding",
+      "lang": "py",
+      "prompt": "I want a Python script that turns a non-negative whole number into a base62 string and back again. It uses the digits 0-9, then the uppercase letters A-Z, then the lowercase letters a-z, in that order. Run it as \"encode <number>\" to get the string, or \"decode <string>\" to get the number back, reading the command and value from the command line and printing the result.",
+      "out_red_full": 43,
+      "size_red_full": 55,
+      "out_red": {
+        "lite": 42,
+        "full": 43,
+        "ultra": 49
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 45,
+        "size_full": 17,
+        "out_base": 1144,
+        "out_full": 671
+      }
+    },
+    {
+      "id": "t33_romans",
+      "name": "Roman numerals",
+      "stratum": "irreducible",
+      "stratum_plain": "Small fixed jobs (little to trim)",
+      "domain": "encoding",
+      "lang": "js",
+      "prompt": "I need a Node script that converts between regular numbers and Roman numerals. If I give it a number on the command line it prints the Roman numeral, and if I give it a Roman numeral it prints the number. It should handle values from 1 up to 3999 and use the usual subtractive forms like IV and IX rather than writing everything out with repeated letters.",
+      "out_red_full": 17,
+      "size_red_full": 30,
+      "out_red": {
+        "lite": 10,
+        "full": 17,
+        "ultra": 18
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 40,
+        "size_full": 27,
+        "out_base": 1359,
+        "out_full": 1114
+      }
+    },
+    {
+      "id": "t40_clamp",
+      "name": "Add a clamp command",
+      "stratum": "brownfield",
+      "stratum_plain": "Edits to an existing codebase",
+      "domain": "cli",
+      "lang": "py",
+      "prompt": "I want to be able to clamp the numbers too, so anything below a given floor becomes the floor and anything above a given ceiling becomes the ceiling.",
+      "out_red_full": 1,
+      "size_red_full": 0,
+      "out_red": {
+        "lite": -9,
+        "full": 1,
+        "ultra": -12
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 22,
+        "size_full": 22,
+        "out_base": 1020,
+        "out_full": 993
+      }
+    },
+    {
+      "id": "t41_cart",
+      "name": "Add a discount code",
+      "stratum": "brownfield",
+      "stratum_plain": "Edits to an existing codebase",
+      "domain": "ecommerce",
+      "lang": "js",
+      "prompt": "We want to support discount codes now. A shopper should be able to apply a code that takes a percentage off the order, and the amount they owe should reflect that.",
+      "out_red_full": 65,
+      "size_red_full": 30,
+      "out_red": {
+        "lite": 64,
+        "full": 65,
+        "ultra": 66
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 19,
+        "size_full": 20,
+        "out_base": 3046,
+        "out_full": 1082
+      }
+    },
+    {
+      "id": "t42_router",
+      "name": "Add a route parameter",
+      "stratum": "brownfield",
+      "stratum_plain": "Edits to an existing codebase",
+      "domain": "web",
+      "lang": "py",
+      "prompt": "I need routes that can capture a piece of the path, like the user id in /users/123, and hand that captured value to the handler so it can use it.",
+      "out_red_full": 6,
+      "size_red_full": 11,
+      "out_red": {
+        "lite": -6,
+        "full": 6,
+        "ultra": 28
+      },
+      "correct": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 60
+      },
+      "robust": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "secure": {
+        "baseline": 100,
+        "lite": 100,
+        "full": 100,
+        "ultra": 100
+      },
+      "abs": {
+        "size_base": 43,
+        "size_full": 38,
+        "out_base": 1682,
+        "out_full": 1709
+      }
+    }
+  ],
+  "strata": {
+    "over-build-tempting": {
+      "plain": "Jobs that tempt over-building",
+      "n_tasks": 6,
+      "out_red_full": 42.5,
+      "robust_baseline": 100.0,
+      "robust_lite": 100.0,
+      "robust_full": 100.0,
+      "robust_ultra": 100.0,
+      "n_harm": 0
+    },
+    "minimal-is-wrong": {
+      "plain": "Edge-case-sensitive jobs",
+      "n_tasks": 6,
+      "out_red_full": 54.0,
+      "robust_baseline": 86.7,
+      "robust_lite": 43.3,
+      "robust_full": 46.7,
+      "robust_ultra": 33.3,
+      "n_harm": 4
+    },
+    "security-sensitive": {
+      "plain": "Security-sensitive jobs",
+      "n_tasks": 5,
+      "out_red_full": 51,
+      "robust_baseline": 100.0,
+      "robust_lite": 100.0,
+      "robust_full": 100.0,
+      "robust_ultra": 100.0,
+      "n_harm": 0
+    },
+    "irreducible": {
+      "plain": "Small fixed jobs (little to trim)",
+      "n_tasks": 4,
+      "out_red_full": 36.5,
+      "robust_baseline": 100.0,
+      "robust_lite": 85.0,
+      "robust_full": 75.0,
+      "robust_ultra": 80.0,
+      "n_harm": 1
+    },
+    "brownfield": {
+      "plain": "Edits to an existing codebase",
+      "n_tasks": 3,
+      "out_red_full": 6,
+      "robust_baseline": 100.0,
+      "robust_lite": 100.0,
+      "robust_full": 100.0,
+      "robust_ultra": 100.0,
+      "n_harm": 0
+    }
+  },
+  "domains": {
+    "Data & numbers": {
+      "out_red_full": 38.5,
+      "n": 8,
+      "tasks": [
+        "t01_csvjson",
+        "t10_balance",
+        "t11_invoice",
+        "t12_duration",
+        "t13_csvcol",
+        "t14_avg",
+        "t32_base62",
+        "t33_romans"
+      ]
+    },
+    "Text processing": {
+      "out_red_full": 39,
+      "n": 5,
+      "tasks": [
+        "t02_wordfreq",
+        "t03_slugify",
+        "t15_initials",
+        "t30_slug",
+        "t31_iso8601"
+      ]
+    },
+    "Command-line tools": {
+      "out_red_full": 46,
+      "n": 3,
+      "tasks": [
+        "t04_envparse",
+        "t06_dedupe",
+        "t40_clamp"
+      ]
+    },
+    "Web pages / frontend": {
+      "out_red_full": 36.5,
+      "n": 2,
+      "tasks": [
+        "t05_faqpage",
+        "t42_router"
+      ]
+    },
+    "Security": {
+      "out_red_full": 51,
+      "n": 5,
+      "tasks": [
+        "t20_saferead",
+        "t21_userlookup",
+        "t22_pinghost",
+        "t23_dlticket",
+        "t24_gosafe"
+      ]
+    },
+    "Web app / backend": {
+      "out_red_full": 65,
+      "n": 1,
+      "tasks": [
+        "t41_cart"
+      ]
+    }
+  },
+  "harm_tasks": [
+    {
+      "id": "t10_balance",
+      "name": "Running balance",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "robust": {
+        "baseline": 80,
+        "lite": 60,
+        "full": 80,
+        "ultra": 0
+      }
+    },
+    {
+      "id": "t11_invoice",
+      "name": "Invoice total",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "robust": {
+        "baseline": 100,
+        "lite": 0,
+        "full": 0,
+        "ultra": 0
+      }
+    },
+    {
+      "id": "t12_duration",
+      "name": "Track-length adder",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "robust": {
+        "baseline": 40,
+        "lite": 0,
+        "full": 0,
+        "ultra": 0
+      }
+    },
+    {
+      "id": "t14_avg",
+      "name": "Average of numbers",
+      "stratum_plain": "Edge-case-sensitive jobs",
+      "robust": {
+        "baseline": 100,
+        "lite": 0,
+        "full": 0,
+        "ultra": 0
+      }
+    },
+    {
+      "id": "t31_iso8601",
+      "name": "ISO-8601 duration",
+      "stratum_plain": "Small fixed jobs (little to trim)",
+      "robust": {
+        "baseline": 100,
+        "lite": 40,
+        "full": 0,
+        "ultra": 20
+      }
+    }
+  ],
+  "tokens": {
+    "baseline": {
+      "out_tok": 1299,
+      "in_tok": 2504,
+      "cache_read": 39926,
+      "cache_creation": 5858,
+      "cost_usd": 0.1255
+    },
+    "lite": {
+      "out_tok": 795,
+      "in_tok": 4884,
+      "cache_read": 41946,
+      "cache_creation": 7645,
+      "cost_usd": 0.1417
+    },
+    "full": {
+      "out_tok": 767,
+      "in_tok": 4899,
+      "cache_read": 44408,
+      "cache_creation": 7615,
+      "cost_usd": 0.142
+    },
+    "ultra": {
+      "out_tok": 719,
+      "in_tok": 4916,
+      "cache_read": 41065,
+      "cache_creation": 7561,
+      "cost_usd": 0.1387
+    }
+  }
+}

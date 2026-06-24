@@ -1,0 +1,1 @@
+I want a Python script that turns a non-negative whole number into a base62 string and back again. It uses the digits 0-9, then the uppercase letters A-Z, then the lowercase letters a-z, in that order. Run it as "encode <number>" to get the string, or "decode <string>" to get the number back, reading the command and value from the command line and printing the result.

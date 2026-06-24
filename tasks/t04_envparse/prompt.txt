@@ -1,0 +1,1 @@
+We keep our app settings in a .env file with lines like DB_HOST=localhost, one setting per line, and I want to load them into a program. Write a Python script that takes the path to one of these files and prints the settings as a JSON object mapping each name to its value. The files have blank lines and comment lines starting with # that should be left out.

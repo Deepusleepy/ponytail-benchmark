@@ -1,0 +1,1 @@
+I need a Python script that takes two numbers as command-line arguments and prints their sum.

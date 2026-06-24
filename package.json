@@ -1,0 +1,24 @@
+{
+  "name": "v3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "acorn": "^8.17.0",
+    "acorn-walk": "^8.3.5",
+    "node-html-parser": "^8.0.3",
+    "postcss": "^8.5.15",
+    "postcss-safe-parser": "^7.0.1"
+  }
+}

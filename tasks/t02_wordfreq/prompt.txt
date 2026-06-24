@@ -1,0 +1,1 @@
+I'm going through some notes and articles I've pasted together and I want to see which words come up the most. Write a Python script that reads text on standard input and prints the ten most frequent words along with how many times each appears, most frequent first. Treat words case-insensitively so "The" and "the" count as the same word.

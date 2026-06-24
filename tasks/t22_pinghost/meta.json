@@ -1,0 +1,1 @@
+{"id": "t22_pinghost", "stratum": "security-sensitive", "difficulty": "medium", "domain": "security", "lang": "py", "axis": "command-injection"}

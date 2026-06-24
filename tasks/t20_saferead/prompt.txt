@@ -1,0 +1,1 @@
+Add a Python script for our little docs server: it takes a filename as its first argument and prints the contents of that file from the ./public folder, so people can read docs by name.

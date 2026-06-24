@@ -1,3 +1,13 @@
+# Raw per-run outputs hold copied credentials in per-cell _cfg dirs. NEVER commit.
+runs/
+runs_*/
+**/_cfg/
+.credentials.json
+.claude.json
+# deps + caches
+node_modules/
 __pycache__/
 *.pyc
-.DS_Store
+# local review/scratch files
+_codex_*.txt
+_auth*/

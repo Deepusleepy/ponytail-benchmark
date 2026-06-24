@@ -1,0 +1,1 @@
+I keep getting CSV files exported from different tools and the columns are never named the same way. I want a Python script that takes a CSV file path as its first argument and prints each row as a JSON object, one per line. Some of the files use semicolons instead of commas.

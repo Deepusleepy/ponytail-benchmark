@@ -1,0 +1,1 @@
+I've got log files where the same line shows up over and over, and plain sorting jumbles the order I care about. Write a Python script that reads lines on standard input and prints them back with the repeats removed, keeping only the first time each line appears and in that original order.

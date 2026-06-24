@@ -1,0 +1,1 @@
+Write a Python script that reads track lengths from standard input, one per line in "minutes:seconds" form (the way they show up on an album track list, like 3:45). Add them all up and print the total playlist length back in the same minutes:seconds form.
