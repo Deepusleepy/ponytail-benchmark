@@ -1,0 +1,1 @@
+Write a Python script that reads full names from standard input, one name per line, and for each one prints the person's initials in capitals. So "Ada Lovelace" comes out as "AL". I'm using it to make badge labels from a sign-up sheet.

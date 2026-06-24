@@ -1,0 +1,139 @@
+{
+  "n_records": 480,
+  "headline": {
+    "lite": {
+      "reduction_pct": 39.7,
+      "ci95": [
+        32.0,
+        46.5
+      ],
+      "n_tasks": 24
+    },
+    "full": {
+      "reduction_pct": 43.8,
+      "ci95": [
+        36.2,
+        50.8
+      ],
+      "n_tasks": 24
+    },
+    "ultra": {
+      "reduction_pct": 45.6,
+      "ci95": [
+        36.6,
+        53.4
+      ],
+      "n_tasks": 24
+    }
+  },
+  "size": {
+    "lite": {
+      "reduction_pct": 47.9,
+      "ci95": [
+        39.0,
+        55.9
+      ],
+      "n_tasks": 24
+    },
+    "full": {
+      "reduction_pct": 53.0,
+      "ci95": [
+        44.2,
+        60.8
+      ],
+      "n_tasks": 24
+    },
+    "ultra": {
+      "reduction_pct": 56.4,
+      "ci95": [
+        47.2,
+        64.3
+      ],
+      "n_tasks": 24
+    }
+  },
+  "noharm": {
+    "correctness": {
+      "margin_pp": 3.0,
+      "rows": {
+        "baseline": 99.2,
+        "lite": {
+          "rate": 98.3,
+          "drop_pp": 0.8,
+          "non_inferior": true
+        },
+        "full": {
+          "rate": 99.2,
+          "drop_pp": 0.0,
+          "non_inferior": true
+        },
+        "ultra": {
+          "rate": 97.5,
+          "drop_pp": 1.7,
+          "non_inferior": true
+        }
+      }
+    },
+    "security": {
+      "margin_pp": 0.0,
+      "rows": {
+        "baseline": 100.0,
+        "lite": {
+          "rate": 99.2,
+          "drop_pp": 0.8,
+          "non_inferior": false
+        },
+        "full": {
+          "rate": 99.2,
+          "drop_pp": 0.8,
+          "non_inferior": false
+        },
+        "ultra": {
+          "rate": 99.2,
+          "drop_pp": 0.8,
+          "non_inferior": false
+        }
+      }
+    },
+    "robustness": {
+      "margin_pp": 5.0,
+      "rows": {
+        "baseline": 96.7,
+        "lite": {
+          "rate": 83.3,
+          "drop_pp": 13.3,
+          "non_inferior": false
+        },
+        "full": {
+          "rate": 82.5,
+          "drop_pp": 14.2,
+          "non_inferior": false
+        },
+        "ultra": {
+          "rate": 80.0,
+          "drop_pp": 16.7,
+          "non_inferior": false
+        }
+      }
+    }
+  },
+  "dose_response": {
+    "output_token_reduction": {
+      "lite": 39.7,
+      "full": 43.8,
+      "ultra": 45.6
+    },
+    "monotonic": true
+  },
+  "headline_perprotocol": {
+    "lite": {
+      "reduction_pct": 39.7
+    },
+    "full": {
+      "reduction_pct": 43.8
+    },
+    "ultra": {
+      "reduction_pct": 45.6
+    }
+  }
+}

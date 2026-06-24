@@ -1,0 +1,1 @@
+{"id": "_smoke", "stratum": "smoke", "difficulty": "trivial", "domain": "cli", "lang": "py", "note": "harness smoke test only, not a benchmark task"}

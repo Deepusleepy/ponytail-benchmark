@@ -1,0 +1,1 @@
+Write a Python script that reads transaction amounts from standard input, one per line (they arrive as text, the way a form would send them), and prints the running balance after each amount, one per line, and then the final total on the last line. Deposits are positive, withdrawals are negative.

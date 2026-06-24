@@ -1,0 +1,1 @@
+Write a Python script that reads invoice line items from standard input, one per line as "quantity,unit price" (the way they'd come off a spreadsheet export). For each line it should multiply quantity by unit price, and at the end print the subtotal of all the lines as a dollar amount with two decimals.

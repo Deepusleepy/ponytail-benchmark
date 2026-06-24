@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ponytail Benchmark</title>
+<style>
+  :root{
+    --serif:'Sitka Heading','Sitka',Cambria,'Hoefler Text',Georgia,serif;
+    --sans:'Corbel','Candara','Segoe UI',system-ui,-apple-system,sans-serif;
+    --mono:'Cascadia Mono','Cascadia Code',Consolas,ui-monospace,monospace;
+    --paper:#f4f1e9;--paper2:#fbf9f3;--ink:#221f1a;--muted:#6f685b;--faint:#a59d8c;
+    --line:#e0dac9;--line2:#cfc7b2;
+    --base:#3a5a7d;--lite:#d9a877;--full:#c2683f;--ultra:#7e3818;
+    --good:#4f7a52;--warn:#c79a3a;--bad:#b0453a;--maxw:1080px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 14% -8%,#ffffff55,transparent 38%),radial-gradient(circle at 100% 0,#e9e2cf55,transparent 45%);}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;line-height:1.15;margin:0}
+  .mono{font-family:var(--mono)}
+  a{color:var(--full)}
+  .masthead{padding:62px 0 24px;border-bottom:1px solid var(--line2)}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--full);margin-bottom:16px}
+  .masthead h1{font-size:clamp(40px,7vw,68px)}
+  .masthead .sub{margin-top:14px;font-size:clamp(16px,2.2vw,20px);color:var(--muted);max-width:60ch}
+  section{padding:44px 0;border-bottom:1px solid var(--line)}
+  .lab{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+  h2.t{font-size:clamp(23px,3.2vw,31px);max-width:26ch}
+  .intro{margin-top:12px;color:var(--muted);max-width:66ch;font-size:16.5px}
+  /* hero */
+  .hero{display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;margin:26px 0 6px}
+  .hero .n{font-family:var(--mono);font-size:clamp(58px,12vw,118px);font-weight:700;color:var(--full);line-height:.85;letter-spacing:-.03em}
+  .hero .cap{font-size:19px;color:var(--ink);max-width:24ch;font-family:var(--serif)}
+  .hero .cap b{color:var(--good)}
+  .caveat{background:#c79a3a14;border:1px solid #c79a3a44;border-left:4px solid var(--warn);border-radius:10px;padding:16px 20px;margin-top:22px;font-size:16.5px}
+  .caveat b{color:#9a6f1e}
+  /* tiles */
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+  @media(max-width:720px){.tiles{grid-template-columns:1fr 1fr}}
+  .tile{background:var(--paper2);border:1px solid var(--line2);border-radius:12px;padding:18px 16px}
+  .tile .big{font-family:var(--mono);font-size:30px;font-weight:700;line-height:1}
+  .tile .ll{font-size:13px;color:var(--muted);margin-top:8px}
+  .tile.g{border-top:3px solid var(--good)} .tile.g .big{color:var(--good)}
+  .tile.a{border-top:3px solid var(--warn)} .tile.a .big{color:#9a6f1e}
+  /* bars */
+  .brow{display:grid;grid-template-columns:200px 1fr;align-items:center;gap:14px;margin:9px 0}
+  @media(max-width:620px){.brow{grid-template-columns:120px 1fr;gap:10px}}
+  .brow .bl{font-size:14px}
+  .track{background:#0000000d;border-radius:6px;height:28px;position:relative;overflow:hidden}
+  .fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding:0 10px;color:#fff;font-family:var(--mono);font-size:13px;min-width:40px}
+  /* what we tested */
+  .flow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;font-family:var(--mono);font-size:14px;color:var(--muted)}
+  .flow .b{background:var(--paper2);border:1px solid var(--line2);border-radius:10px;padding:12px 16px;text-align:center;color:var(--ink)}
+  .flow .b b{display:block;font-size:22px;color:var(--full)}
+  .flow .x{font-size:18px;color:var(--faint)}
+  /* dial */
+  .dial{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  @media(max-width:720px){.dial{grid-template-columns:1fr}}
+  .step{border:1px solid var(--line2);border-radius:12px;padding:16px;background:var(--paper2)}
+  .step h4{font-size:16px}.step .save{font-family:var(--mono);font-size:26px;font-weight:700;margin:6px 0}
+  .step .frag{font-size:13px;color:var(--muted)}
+  /* router */
+  .router{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:6px}
+  @media(max-width:720px){.router{grid-template-columns:1fr 1fr}}
+  .router a{display:block;text-decoration:none;color:var(--ink);background:var(--paper2);border:1px solid var(--line2);border-radius:12px;padding:16px;transition:border-color .15s}
+  .router a:hover{border-color:var(--full)}
+  .router a .q{font-size:11px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .router a .w{font-family:var(--serif);font-size:17px;margin-top:5px}
+  /* matrix / chip */
+  .mrow{display:grid;grid-template-columns:230px 1fr 150px;align-items:center;gap:14px;margin:11px 0;padding-bottom:11px;border-bottom:1px solid var(--line)}
+  @media(max-width:760px){.mrow{grid-template-columns:1fr;gap:6px}}
+  .mrow .ml{font-size:15px} .mrow .ml small{display:block;color:var(--faint);font-size:12px;font-family:var(--mono)}
+  .chip{font-family:var(--mono);font-size:11px;letter-spacing:.03em;padding:5px 10px;border-radius:20px;text-align:center;white-space:nowrap}
+  .chip.ok{background:#4f7a5218;color:var(--good);border:1px solid #4f7a5240}
+  .chip.warn{background:#c79a3a1e;color:#9a6f1e;border:1px solid #c79a3a55}
+  /* verdict */
+  .verdict{background:#4f7a5212;border:1px solid #4f7a5240;border-left:4px solid var(--good);border-radius:12px;padding:20px 22px;margin-top:6px}
+  .verdict h3{font-size:19px;color:var(--good)} .verdict p{margin:8px 0 0;color:var(--muted)}
+  /* comparison */
+  table.cmp{width:100%;border-collapse:collapse;margin-top:10px;font-size:14.5px}
+  table.cmp th{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);text-align:left;padding:0 12px 9px;border-bottom:1px solid var(--line2)}
+  table.cmp td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.cmp .num{font-family:var(--mono);font-weight:700;font-size:17px;white-space:nowrap}
+  tr.ours{background:#c2683f0d} tr.flawed{color:var(--muted)}
+  /* divider */
+  .divider{text-align:center;padding:44px 0 8px}
+  .divider .line{border-top:1px dashed var(--line2);margin-bottom:18px}
+  .divider h2{font-size:clamp(22px,3vw,30px)} .divider p{color:var(--muted);margin-top:8px;font-size:15px}
+  /* task cards */
+  details.grp{margin:12px 0;border:1px solid var(--line2);border-radius:12px;background:var(--paper2);overflow:hidden}
+  details.grp>summary{cursor:pointer;padding:15px 18px;font-family:var(--serif);font-size:17px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  details.grp>summary::-webkit-details-marker{display:none}
+  details.grp>summary .meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;padding:0 16px 16px}
+  .card{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:14px}
+  .card .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+  .card h4{font-size:15px} .card .tag{font-family:var(--mono);font-size:10px;color:var(--faint);text-transform:uppercase}
+  .card .ask{font-size:12.5px;color:var(--muted);margin:6px 0;line-height:1.45}
+  .card .catch{font-size:12px;color:var(--ink);background:#c79a3a12;border-radius:6px;padding:6px 8px;margin:6px 0}
+  .card .res{display:flex;gap:6px;margin-top:8px;font-family:var(--mono);font-size:11px}
+  .card .res .c{flex:1;text-align:center;border-radius:5px;padding:5px 2px;background:#0000000a}
+  .card .res .c b{display:block;font-size:13px}
+  .card .res .c .cn{display:block;font-size:9px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+  .card .res .c .ind{display:flex;gap:3px;justify-content:center;margin-top:5px}
+  .card .res .c .ind i{width:10px;height:5px;border-radius:1px;display:block}
+  ul.lim{margin:0;padding-left:18px}ul.lim li{color:var(--muted);font-size:14.5px;margin-bottom:8px}ul.lim li b{color:var(--ink)}
+  .panel-t{font-size:17px;margin:22px 0 2px}.panel-s{color:var(--muted);font-size:13px;margin-bottom:12px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}.sw{width:12px;height:12px;border-radius:3px}
+  footer{padding:40px 0 60px;color:var(--faint);font-family:var(--mono);font-size:12px;line-height:1.8}
+  /* CI range bars (two rulers) */
+  .rng{position:relative;background:#0000000d;border-radius:6px;height:30px;overflow:hidden}
+  .rng .ci{position:absolute;top:0;height:100%;background:#00000012}
+  .rng .fill{position:absolute;top:0;height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding:0 9px;color:#fff;font-family:var(--mono);font-size:12px}
+  .rng .tick{position:absolute;top:0;height:100%;width:2px;background:#ffffffcc}
+  .cinote{font-family:var(--mono);font-size:11px;color:var(--faint);margin:3px 0 12px}
+  /* economics */
+  .econ{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:18px 0 6px}
+  @media(max-width:720px){.econ{grid-template-columns:1fr}}
+  .ecard{background:var(--paper2);border:1px solid var(--line2);border-radius:12px;padding:16px}
+  .ecard .eh{font-size:13px;color:var(--muted)} .ecard .ev{font-family:var(--mono);font-size:30px;font-weight:700;margin:6px 0 2px}
+  .ecard .es{font-size:12.5px;color:var(--faint)}
+  .ecard.down{border-top:3px solid var(--good)} .ecard.down .ev{color:var(--good)}
+  .ecard.up{border-top:3px solid var(--bad)} .ecard.up .ev{color:var(--bad)}
+  .ecard.flat{border-top:3px solid var(--warn)} .ecard.flat .ev{color:#9a6f1e}
+  .crow{display:flex;gap:4px;margin-top:7px}
+  .crow i{flex:1;height:6px;border-radius:3px;font-style:normal}
+  /* see it for yourself */
+  .sxs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+  @media(max-width:680px){.sxs{grid-template-columns:1fr}}
+  .sxs figure{margin:0;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:var(--paper2)}
+  .sxs img{display:block;width:100%;border-bottom:1px solid var(--line)}
+  .sxs figcaption{padding:11px 14px;font-size:13px;color:var(--muted)}
+  .sxs figcaption b{color:var(--ink);font-family:var(--mono)}
+  /* heatmap */
+  .heat{display:grid;grid-template-columns:172px repeat(4,1fr);gap:3px;margin-top:16px;font-family:var(--mono);font-size:11px}
+  @media(max-width:620px){.heat{grid-template-columns:110px repeat(4,1fr);font-size:10px}}
+  .heat .hh{color:var(--faint);text-transform:uppercase;letter-spacing:.04em;text-align:center;padding:2px 0}
+  .heat .hn{font-family:var(--sans);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;align-self:center}
+  .heat .hc{height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600}
+  .heat .hrow{display:contents}
+  /* dumbbell */
+  .dumb{display:grid;grid-template-columns:160px 1fr 62px;align-items:center;gap:12px;margin:9px 0;font-size:13px}
+  @media(max-width:620px){.dumb{grid-template-columns:110px 1fr 52px}}
+  .dumb .dl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dtrack{position:relative;height:22px;background:#0000000d;border-radius:5px}
+  .dtrack .dline{position:absolute;top:50%;height:2px;background:var(--line2);transform:translateY(-50%)}
+  .dtrack .dpt{position:absolute;top:50%;width:13px;height:13px;border-radius:50%;transform:translate(-50%,-50%);border:1.5px solid var(--paper2)}
+  .dumb .dg{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right}
+  /* token mix */
+  .tmix{display:grid;grid-template-columns:88px 1fr;align-items:center;gap:12px;margin:7px 0}
+  .tmix .tl{font-size:13px}
+  .tbar{display:flex;height:26px;border-radius:5px;overflow:hidden;background:#0000000d}
+  .tbar .tin{background:var(--lite);display:flex;align-items:center;padding:0 8px;color:#5b4326;font-family:var(--mono);font-size:11px}
+  .tbar .tout{background:var(--full);display:flex;align-items:center;padding:0 8px;color:#fff;font-family:var(--mono);font-size:11px}
+  /* radar + scorecard */
+  .profile{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:center;margin-top:18px}
+  @media(max-width:760px){.profile{grid-template-columns:1fr}}
+  .radar svg{width:100%;height:auto;display:block}
+  .score{display:flex;flex-direction:column;gap:13px}
+  .sd .sdh{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;margin-bottom:5px}
+  .sd .sdh b{font-family:var(--serif);font-size:15px;font-weight:600}
+  .sd .sdg{font-family:var(--mono);font-size:12px}
+  .sd .sdg.win{color:var(--good)} .sd .sdg.lose{color:var(--bad)} .sd .sdg.tie{color:var(--faint)}
+  .sd .sb{position:relative;height:9px;border-radius:5px;background:#0000000d;margin:2px 0}
+  .sd .sb i{position:absolute;left:0;top:0;height:100%;border-radius:5px}
+  .sd .sb.refbar{display:flex;align-items:center;background:repeating-linear-gradient(90deg,#0000000a 0 6px,transparent 6px 12px)}
+  .sd .refl{font-size:10px;color:var(--faint);font-family:var(--mono);padding-left:7px;white-space:nowrap}
+  .rlegend{display:flex;gap:18px;margin-top:14px;font-size:12.5px;color:var(--muted);justify-content:center}
+  .rlegend span{display:inline-flex;align-items:center;gap:6px}
+  .rlegend .rk{width:14px;height:14px;border-radius:3px}
+  /* paired per-task bars */
+  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:18px}
+  @media(max-width:760px){.pgrid{grid-template-columns:1fr}}
+  .prow{margin:8px 0}
+  .prow .pl{font-size:12.5px;color:var(--ink);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pbar{position:relative;height:13px;border-radius:3px;margin:2px 0;display:flex;align-items:center;justify-content:flex-end;padding-right:5px;font-family:var(--mono);font-size:9.5px;color:#fff;min-width:22px}
+  .pbar.b{background:var(--base)} .pbar.p{background:var(--full)}
+  .pcap{font-size:11px;color:var(--faint);font-family:var(--mono)}
+</style></head>
+<body><div class="wrap">
+
+<header class="masthead">
+  <div class="kicker">Independent test, graded by running the code</div>
+  <h1>Ponytail Benchmark</h1>
+  <p class="sub">Ponytail is a skill that makes an AI write less code. We measured whether that is a good trade, over 480 real builds on Opus 4.8.</p>
+</header>
+
+<!-- 1. HERO: the win -->
+<section>
+  <div class="lab">The short answer</div>
+  <div class="hero"><div class="n" id="heroNum">~44%</div><div class="cap">less code, and it <b>still works</b>, and blocks the attacks we ran.</div></div>
+  <p class="intro" id="heroIntro"></p>
+  <!-- 2. the caveat, in the same breath -->
+  <div class="caveat" id="caveat"></div>
+</section>
+
+<!-- 3. bottom-line tiles -->
+<section>
+  <div class="lab">The bottom line, in four numbers</div>
+  <div class="tiles" id="tiles"></div>
+  <p class="intro">Three are wins and one is a watch-out. The rest of the page shows how we got these numbers.</p>
+</section>
+
+<!-- 4. what we tested -->
+<section>
+  <div class="lab">What we actually tested</div>
+  <h2 class="t">24 real coding jobs, built four ways, five times each.</h2>
+  <p class="intro">We gave a model 24 normal coding jobs. We built each one four ways: once with <b>no plugin</b>, then with the ponytail plugin at each of its three levels, <b>Lite</b>, <b>Full</b>, and <b>Ultra</b> (Full is the plugin's default). We did that five times for each, then graded every result by <b>running the code</b>, not by reading it.</p>
+  <div class="flow" id="flow"></div>
+</section>
+
+<!-- 5. the dial -->
+<section>
+  <div class="lab">The three plugin levels</div>
+  <h2 class="t">Ponytail is a dial. Turn it up for leaner code.</h2>
+  <div class="dial" id="dial"></div>
+  <p class="intro">Turning it up keeps shrinking the code, steadily. The catch shows up only on jobs with hidden edge cases: there, every level strips the guards and the code breaks on bad input, and Ultra was the most fragile of all. So if your job has unstated edge cases, no level is really safe and Ultra is the riskiest. If it does not, Ultra is close to a free win.</p>
+</section>
+
+<!-- 6. comparison -->
+<section>
+  <div class="lab">How this compares</div>
+  <h2 class="t">Our number lands near the skill author's own.</h2>
+  <p class="intro">Three measurements of how much code ponytail saves. They come out close together: an independent rebuild got about the same cut the author reported. (Each used a different setup and ruler, so read this as "same ballpark," not a head-to-head.) We show our old v1 too, and why we no longer trust it.</p>
+  <div style="overflow-x:auto"><table class="cmp"><thead><tr><th>Who measured it</th><th>Less code</th><th>What the test was</th></tr></thead><tbody id="cmp"></tbody></table></div>
+  <p class="intro" style="font-size:14px">A v2 design came in between, but its numbers were wrong, so we rebuilt it as this v3. The full account of why v1 was bad and how v3 fixed it is further down.</p>
+</section>
+
+<!-- DEEP DIVIDER -->
+<div class="divider"><div class="line"></div><h2>Dig into your kind of work</h2><p>From here on: where it helps, where it bites, your field, and every single job we ran.</p></div>
+
+<!-- D0 router -->
+<section>
+  <div class="lab">Find your answer</div>
+  <div class="router">
+    <a href="#bytype"><div class="q">Where does it help?</div><div class="w">By kind of work</div></a>
+    <a href="#byfield"><div class="q">What do you build?</div><div class="w">By field</div></a>
+    <a href="#safety"><div class="q">Is it safe?</div><div class="w">Security verdict</div></a>
+    <a href="#tasks"><div class="q">Show me everything</div><div class="w">All 24 jobs</div></a>
+  </div>
+</section>
+
+<!-- D1 safety (highest-anxiety question, answered first) -->
+<section id="safety">
+  <div class="lab">Is it safe?</div>
+  <div class="verdict" id="safetyVerdict"></div>
+</section>
+
+<!-- D1b how big / how sure -->
+<section>
+  <div class="lab">How big, and how sure</div>
+  <h2 class="t">Two ways to measure the cut, with the error bars.</h2>
+  <p class="intro">"Less code" can mean two things, so we measured both: the raw text the model writes (output tokens), and the count of logical statements a parser finds in the result (so reformatting or comments cannot game it). The pale band behind each bar is the 95% confidence range across the 24 jobs; the white tick is the best estimate. A wide band means the jobs varied a lot.</p>
+  <div id="rulers" style="margin-top:20px;max-width:780px"></div>
+</section>
+
+<!-- D1c see it for yourself -->
+<section>
+  <div class="lab">See it for yourself</div>
+  <h2 class="t">Same FAQ page. 73% less code.</h2>
+  <p class="intro">One of the jobs was a simple FAQ web page. Both versions below render the same three questions and open and close the same way. The difference is how they were built: with no plugin the model hand-rolled the styling and the open and close logic; with ponytail at Full it leaned on the browser's built-in collapsible element and almost no styling. Same result, far less code, a little less polish. That is the whole idea in one picture.</p>
+  <div class="sxs">
+    <figure><img src="/*__FAQ_BASE__*/" alt="FAQ page built with no plugin"><figcaption><b>No plugin</b> &middot; 3,509 bytes of HTML, fully hand-styled</figcaption></figure>
+    <figure><img src="/*__FAQ_FULL__*/" alt="FAQ page built with ponytail at Full"><figcaption><b>Full</b> &middot; 953 bytes, 67% fewer statements, native elements</figcaption></figure>
+  </div>
+</section>
+
+<!-- D2 by work type -->
+<section id="bytype">
+  <div class="lab">By kind of work</div>
+  <h2 class="t">Where it helps a lot, and where it bites.</h2>
+  <p class="intro">Each row: how much less code on that kind of job, and whether the leaner code held up on bad input. The big cuts are safe except where a job has edge cases the prompt left unstated. That mostly means the edge-case-sensitive jobs, but it also caught one job we had filed as a small fixed task (ISO-8601 duration parsing), which turned out to have its own hidden edge cases. The lesson is the trait, not the bucket: it bites wherever the tricky inputs go unsaid.</p>
+  <div id="bytypeRows" style="margin-top:18px"></div>
+</section>
+
+<!-- D2b profile: radar + scorecard -->
+<section>
+  <div class="lab">The whole picture</div>
+  <h2 class="t">What you gain, and what you risk.</h2>
+  <p class="intro">Ponytail at Full against no plugin, on every dimension we measured. Further out on the radar is better. The first two axes, code saved and output saved, are measured against no plugin, so no plugin sits at the center there by definition (it is the full-length baseline, it saves nothing). On the other four, both are scored the same way. The shape tells the story: ponytail pushes way out on the two leanness axes, stays level on correctness and security, and pulls in on handling bad input, most sharply on the jobs with hidden edge cases. We measure these by running the code, not by asking an AI to grade it, which is the whole reason this benchmark exists.</p>
+  <div class="profile">
+    <div class="radar" id="radar"></div>
+    <div class="score" id="score"></div>
+  </div>
+  <div class="rlegend"><span><span class="rk" style="background:var(--base)"></span>No plugin</span><span><span class="rk" style="background:var(--full)"></span>Ponytail (Full)</span></div>
+</section>
+
+<!-- D2c failure heatmap -->
+<section>
+  <div class="lab">Where it breaks, exactly</div>
+  <h2 class="t">Bad-input handling, every job by level.</h2>
+  <p class="intro">Each cell is how often that job's code handled bad input, green for always, red for never. Almost the whole grid is green. The damage is a handful of rows, and within those, the cells get redder as the plugin gets stronger. No plugin is not flawless either: two jobs were already shaky before ponytail touched them.</p>
+  <div id="heatmap" class="heat"></div>
+</section>
+
+<!-- D2 by field -->
+<section id="byfield">
+  <div class="lab">By field</div>
+  <h2 class="t">Pick your field. How much less code you would get.</h2>
+  <p class="intro">Median code reduction at the Full level (the plugin's default), by the kind of thing you build. Some fields have only a few jobs in this test, so the count is shown; treat the thin ones as a hint, not a promise.</p>
+  <div id="byfieldRows" class="bars" style="margin-top:18px;max-width:720px"></div>
+</section>
+
+<!-- D3b output vs code-size divergence -->
+<section>
+  <div class="lab">Two kinds of less</div>
+  <h2 class="t">Writing less is not the same as less code.</h2>
+  <p class="intro">For each job we measured two things: how much less the model wrote (output), and how much smaller the actual parsed code got. Usually they move together, but not always. Sometimes the model trims its explanation while the code barely changes; sometimes the code shrinks far more than the writing. The jobs where the two disagree most:</p>
+  <div id="dumb" style="margin-top:16px;max-width:760px"></div>
+  <div class="legend" style="margin-top:14px"><span><span class="sw" style="background:var(--full);border-radius:50%"></span>output, what it wrote</span><span><span class="sw" style="background:var(--base);border-radius:50%"></span>parsed code size</span></div>
+</section>
+
+<!-- D4 dose -->
+<section>
+  <div class="lab">Turning it up</div>
+  <h2 class="t">Higher levels keep shrinking code. On fragile jobs they do not get safer.</h2>
+  <p class="intro">Two different stories. The code keeps shrinking as you turn the plugin up, clean and steady. But on the jobs with hidden edge cases, the leaner code breaks at every level, and Ultra was the most fragile of all. There is no setting that buys you the savings without the risk on that kind of job. (Averaged over all 24 jobs the bad-input pass rate looks milder, from 97% to about 83%, but that average is misleading: it blends the 19 jobs that never broke with the few that broke badly.)</p>
+  <div class="panel-t">Less code (every job)</div><div id="doseSave" class="bars"></div>
+  <div class="panel-t">Handles bad input (the jobs with hidden edge cases)</div><div id="doseRobust" class="bars"></div>
+</section>
+
+<!-- D4b cost / economics -->
+<section>
+  <div class="lab">What it costs to run</div>
+  <h2 class="t">The win is leaner code, not a cheaper bill.</h2>
+  <p class="intro">Ponytail saves on what the model writes, but it adds instructions to what the model reads, and you pay for both. Per run, averaged over every job (at the Full level):</p>
+  <div class="econ" id="econ"></div>
+  <div class="panel-t" style="margin-top:22px">Tokens per run: what it reads (input) vs what it writes (output)</div>
+  <div id="tokmix" style="margin-top:10px;max-width:760px"></div>
+  <p class="cinote" id="econnote"></p>
+</section>
+
+<!-- D5a per-task before/after bars -->
+<section>
+  <div class="lab">Every job, before and after</div>
+  <h2 class="t">All 24 jobs: no plugin versus ponytail.</h2>
+  <p class="intro">Two ways to see the cut for every job, sorted biggest to smallest. Left, the actual code size (logical statements). Right, the output tokens the model spent. The blue bar is no plugin, the orange bar is ponytail at Full. A red job name marks the five where the leaner code got more fragile on bad input.</p>
+  <div class="pgrid">
+    <div><div class="panel-t">Code size (logical statements)</div><div id="pairSize" style="margin-top:8px"></div></div>
+    <div><div class="panel-t">Output tokens written</div><div id="pairTok" style="margin-top:8px"></div></div>
+  </div>
+  <div class="rlegend" style="justify-content:flex-start;margin-top:16px"><span><span class="rk" style="background:var(--base)"></span>No plugin</span><span><span class="rk" style="background:var(--full)"></span>Ponytail (Full)</span></div>
+</section>
+
+<!-- D5 all tasks -->
+<section id="tasks">
+  <div class="lab">Every job we ran</div>
+  <h2 class="t">All 24, grouped by kind of work.</h2>
+  <p class="intro">Each card: the job in plain words, the tricky part we checked, then one box per level (Lite, Full, Ultra) showing the code cut and three dots, stays correct, stays secure, handles bad input. Green is good, amber is partial, red is a fail, gray means not tested for that job. Search by name, or click a group to open it.</p>
+  <input id="taskSearch" type="search" placeholder="Search the 24 jobs, like invoice, router, or csv" oninput="filterTasks(this.value)" style="width:100%;max-width:420px;padding:10px 14px;margin:4px 0 12px;border:1px solid var(--rule);border-radius:8px;background:#fff;font-family:inherit;font-size:15px;color:var(--ink)">
+  <div class="legend" style="margin:0 0 14px"><span><span class="sw" style="background:var(--base)"></span>no plugin</span><span><span class="sw" style="background:var(--lite)"></span>Lite</span><span><span class="sw" style="background:var(--full)"></span>Full</span><span><span class="sw" style="background:var(--ultra)"></span>Ultra</span></div>
+  <div id="taskGroups"></div>
+  <div id="taskNohits" style="display:none;color:var(--muted);font-style:italic;margin-top:10px">No job matches that. Try a shorter word.</div>
+</section>
+
+<!-- METHODOLOGY -->
+<div class="divider"><div class="line"></div><h2>How we tested, and why we trust it</h2><p>For the curious: the method, why our first try was no good, and what this still cannot tell you.</p></div>
+
+<section>
+  <div class="lab">Why this benchmark exists</div>
+  <h2 class="t">A test the tool cannot fail tells you nothing.</h2>
+  <p class="intro">Earlier tests of ponytail (the author's, and our own v1) mostly asked "does it write less code?" and got a yes. But to know if less code is <i>worse</i>, the test has to be able to catch it failing. So we built jobs ponytail could actually trip on: jobs that tempt a model to over-build, jobs with edge cases we left unsaid on purpose, and real security holes to defend against. Then we graded by running the code and firing real attacks at it.</p>
+  <div class="panel-t">Why our v1 was not trustworthy</div>
+  <ul class="lim">
+    <li><b>The skill was pasted into the prompt by hand</b>, not run as the real installed plugin. That is not how anyone uses it, and it can flatter the result.</li>
+    <li><b>"Safety" was judged by another AI reading the code</b> and guessing. Reading code is not the same as attacking it, so a "secure" verdict was an opinion, not a test.</li>
+  </ul>
+  <div class="panel-t">How v3 fixed it</div>
+  <ul class="lim">
+    <li><b>Run the real plugin</b> the way you actually would, through the command-line tool, with the skill switched on per run and verified.</li>
+    <li><b>Grade by running the code:</b> correctness by executing it against hidden tests, security by firing real attacks (path traversal, SQL injection, forged tokens) and checking what leaks.</li>
+    <li><b>Harder jobs on purpose,</b> so a normal model fails some of them, which is the only way to tell whether the skill makes things worse.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="lab">The method, in short</div>
+  <div id="method" class="bars"></div>
+</section>
+
+<section>
+  <div class="lab">What this does not tell you</div>
+  <ul class="lim">
+    <li><b>One model, one moment.</b> This is Opus 4.8 at one point in time. Other models, or a future version, may differ.</li>
+    <li><b>Autonomous first drafts.</b> We measured what the model writes on its own, not a back-and-forth where you steer and correct it. In a real chat you would likely catch some of the fragile edge cases.</li>
+    <li><b>24 jobs, not the whole world.</b> The fields with only a couple of jobs are hints, not guarantees.</li>
+    <li><b>"No attack got through" means on this attack suite.</b> Nothing we fired broke in. That is not a proof the code is safe.</li>
+    <li><b>A few runs failed for reasons unrelated to code quality.</b> 2 of 480 had the model's reply leak into the saved file, and 1 was a test stub our recovery step grabbed by mistake; we count all of these as misses, which is the conservative call.</li>
+  </ul>
+</section>
+
+<footer>
+  <div id="foot"></div>
+  <div>Skill: github.com/DietrichGebert/ponytail. Built with plain HTML, no chart libraries. Every number on this page is computed from the saved run data.</div>
+</footer>
+
+</div>
+<script id="data" type="application/json">/*__DATA__*/</script>
+<script>
+(function(){
+  var D; try{ D=JSON.parse(document.getElementById('data').textContent); }catch(e){ return; }
+  function S(id,h){var e=document.getElementById(id); if(e) e.innerHTML=h;}
+  var C={baseline:'#3a5a7d',lite:'#d9a877',full:'#c2683f',ultra:'#7e3818'};
+  var LV=[['lite','Lite'],['full','Full'],['ultra','Ultra']];
+
+  // hero
+  var full=Math.round(D.headline.full.reduction_pct), lite=Math.round(D.headline.lite.reduction_pct), ultra=Math.round(D.headline.ultra.reduction_pct);
+  S('heroNum','~'+full+'%');
+  S('heroIntro','That is at the Full level (the default); it ranges from about '+lite+'% at Lite to '+ultra+'% at Ultra. The code it cut still passed the same correctness tests and survived the same attacks as the full-length code.');
+  var rob=D.noharm.robustness.rows; var robdrop=Math.round((rob.baseline - rob.full.rate));
+  var ec=D.strata['minimal-is-wrong']; var ecBase=Math.round(ec.robust_baseline), ecFull=Math.round(ec.robust_full);
+  var nHarm=D.harm_tasks.length, nTask=D.meta.tasks;
+  S('caveat','<b>The trade-off, up front:</b> when a job leaves an edge case unstated, ponytail tends to strip the defensive handling, and the leaner code breaks on input it was not told to expect. This hit '+nHarm+' of our '+nTask+' jobs. On those, handling of bad input usually fell from near-perfect to near-zero, and turning the skill up made it worse, not better. On the other '+(nTask-nHarm)+' jobs there was no such cost at any setting.');
+
+  // tiles
+  var cor=D.noharm.correctness.rows, sec=D.noharm.security.rows;
+  S('tiles',
+    tile('g','~'+full+'%','less code (about '+lite+'-'+ultra+'% by level)')+
+    tile('g','no loss','passed our correctness tests')+
+    tile('g','no breach','every working build blocked our attacks')+
+    tile('a',nHarm+' of '+nTask,'jobs got fragile on unstated edge cases'));
+  function tile(k,big,ll){return '<div class="tile '+k+'"><div class="big">'+big+'</div><div class="ll">'+ll+'</div></div>';}
+
+  // what we tested flow
+  S('flow','<div class="b"><b>'+D.meta.tasks+'</b>jobs</div><span class="x">x</span><div class="b"><b>4</b>ways each</div><span class="x">x</span><div class="b"><b>'+D.meta.reps+'</b>runs each</div><span class="x">=</span><div class="b"><b>'+D.meta.runs+'</b>builds</div>');
+
+  // dial (savings climb steadily; robustness shown for the edge-case jobs, where baseline is '+ecBase+'%)
+  S('dial', LV.map(function(p){var c=p[0];
+    return '<div class="step" style="border-top:3px solid '+C[c]+'"><h4>'+cap(p[1])+'</h4><div class="save" style="color:'+C[c]+'">-'+Math.round(D.headline[c].reduction_pct)+'%</div><div class="frag">code. On the jobs with hidden edge cases, bad-input handling: '+Math.round(ec['robust_'+c])+'% (no plugin '+ecBase+'%).</div></div>';
+  }).join(''));
+  function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+
+  // comparison
+  S('cmp', D.comparison.map(function(r){
+    var code = r.tokens_pct ? ('-'+r.code_pct+'% code<br><span style="font-size:12px;color:var(--muted)">-'+r.tokens_pct+'% text written</span>') : '-'+r.code_pct+'%';
+    var cls = r.kind==='ours'?'ours':(r.kind==='flawed'?'flawed':'');
+    return '<tr class="'+cls+'"><td><b>'+r.who+'</b></td><td class="num">'+code+'</td><td style="color:var(--muted);font-size:13.5px">'+r.note+'</td></tr>';
+  }).join(''));
+
+  // D1 by work type
+  var order=['over-build-tempting','security-sensitive','minimal-is-wrong','irreducible','brownfield'];
+  S('bytypeRows', order.filter(function(s){return D.strata[s];}).map(function(s){
+    var v=D.strata[s]; var harm = (v.robust_baseline - v.robust_full) >= 8;
+    var chip = harm
+      ? '<span class="chip warn">bad input '+Math.round(v.robust_baseline)+'% to '+Math.round(v.robust_full)+'%</span>'
+      : '<span class="chip ok">held up</span>';
+    var sub = harm ? '<small>'+v.n_tasks+' jobs, '+v.n_harm+' broke on bad input</small>' : '<small>'+v.n_tasks+' jobs</small>';
+    var w=Math.max(Math.min(v.out_red_full,80)/80*100,6);
+    return '<div class="mrow"'+(harm?' style="border-left:4px solid var(--warn);padding-left:14px;background:#c79a3a0a;border-radius:8px 0 0 8px"':'')+'><div class="ml">'+v.plain+sub+'</div>'+
+      '<div class="track"><div class="fill" style="width:'+w+'%;background:var(--full)">-'+v.out_red_full+'%</div></div>'+chip+'</div>';
+  }).join(''));
+
+  // D2 by field
+  var fields=Object.keys(D.domains).map(function(k){return {k:k,v:D.domains[k]};}).sort(function(a,b){return (b.v.out_red_full||0)-(a.v.out_red_full||0);});
+  S('byfieldRows', fields.map(function(f){
+    var w=Math.max(Math.min(f.v.out_red_full,80)/80*100,6);
+    return '<div class="brow"><span class="bl">'+f.k+' <span style="color:var(--faint);font-family:var(--mono);font-size:11px">('+f.v.n+')</span></span><div class="track"><div class="fill" style="width:'+w+'%;background:var(--full)">-'+f.v.out_red_full+'%</div></div></div>';
+  }).join(''));
+
+  // D3 safety verdict
+  S('safetyVerdict','<h3>Yes. No attack got through.</h3><p>Every working build blocked every real attack we fired, including path traversal, SQL injection, and forged tokens. The number reads '+Math.round(sec.full.rate)+'% rather than 100% only because 3 of 75 security runs (all the same job) scored as misses on saved output we could not run: two where the model\'s reply leaked into the file, one where our recovery step grabbed a test stub instead of the real code. None was an attack breaking in. Correctness held too. The one real cost, weaker handling of unstated edge cases, is a reliability issue, not a security one, and it does not appear on the security jobs.</p>');
+
+  // D4 dose
+  S('doseSave', LV.map(function(p){var c=p[0];var r=Math.round(D.headline[c].reduction_pct);
+    return bar(cap(p[1]), r, C[c], '-'+r+'%');}).join(''));
+  S('doseRobust', ['baseline'].concat(LV.map(function(p){return p[0];})).map(function(c){
+    var lbl=c==='baseline'?'No plugin':cap(LV.filter(function(p){return p[0]===c;})[0][1]);
+    var val=Math.round(ec['robust_'+(c==='baseline'?'baseline':c)]);
+    return bar(lbl, val, c==='baseline'?C.baseline:C[c], val+'%', 100);}).join(''));
+  function bar(label,val,col,txt,max){max=max||80;var w=Math.max(Math.min(val,max)/max*100,6);
+    return '<div class="brow"><span class="bl">'+label+'</span><div class="track"><div class="fill" style="width:'+w+'%;background:'+col+'">'+txt+'</div></div></div>';}
+
+  // D1b two rulers with 95% CI (output tokens vs parsed code size)
+  (function(){
+    var CIMAX=70;
+    function rng(low,pt,high,col,val){
+      var L=Math.max(0,low)/CIMAX*100, H=Math.min(high,CIMAX)/CIMAX*100, P=pt/CIMAX*100;
+      return '<div class="rng"><div class="ci" style="left:'+L+'%;width:'+(H-L)+'%"></div>'+
+        '<div class="fill" style="width:'+P+'%;background:'+col+'">'+val+'</div>'+
+        '<div class="tick" style="left:'+P+'%"></div></div>';
+    }
+    var html='';
+    LV.forEach(function(p){var c=p[0]; var o=D.headline[c], s=D.size[c];
+      html+='<div class="panel-t" style="color:'+C[c]+'">'+cap(p[1])+'</div>'+
+        '<div class="brow"><span class="bl">Output text</span>'+rng(o.ci95[0],o.reduction_pct,o.ci95[1],C[c],'-'+Math.round(o.reduction_pct)+'%')+'</div>'+
+        '<div class="cinote">95% confident the cut is between '+Math.round(o.ci95[0])+'% and '+Math.round(o.ci95[1])+'%</div>'+
+        '<div class="brow"><span class="bl">Logic (parsed)</span>'+rng(s.ci95[0],s.reduction_pct,s.ci95[1],C[c],'-'+Math.round(s.reduction_pct)+'%')+'</div>'+
+        '<div class="cinote">95% confident the cut is between '+Math.round(s.ci95[0])+'% and '+Math.round(s.ci95[1])+'%</div>';
+    });
+    S('rulers',html);
+  })();
+
+  // D2b radar + scorecard (ponytail Full vs no plugin, every measured dimension)
+  (function(){
+    var recRob=D.noharm.robustness.rows, ecS=D.strata['minimal-is-wrong'];
+    var DIMS=[
+      {k:'Code saved',   b:0, p:Math.round(D.size.full.reduction_pct), ref:true},
+      {k:'Output saved', b:0, p:Math.round(D.headline.full.reduction_pct), ref:true},
+      {k:'Correct',      b:Math.round(D.noharm.correctness.rows.baseline), p:Math.round(D.noharm.correctness.rows.full.rate)},
+      {k:'Secure',       b:Math.round(D.noharm.security.rows.baseline),     p:Math.round(D.noharm.security.rows.full.rate)},
+      {k:'Robust',       b:Math.round(recRob.baseline), p:Math.round(recRob.full.rate)},
+      {k:'Edge cases',   b:Math.round(ecS.robust_baseline), p:Math.round(ecS.robust_full)}
+    ];
+    var cx=190, cy=162, R=112, N=DIMS.length;
+    function pt(val,i){var a=(-90+i*360/N)*Math.PI/180, r=val/100*R; return [cx+r*Math.cos(a), cy+r*Math.sin(a)];}
+    function polyPts(key,scale){return DIMS.map(function(d,i){var p=pt(d[key],i);return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ');}
+    var rings=''; [25,50,75,100].forEach(function(rv){rings+='<polygon points="'+DIMS.map(function(d,i){var p=pt(rv,i);return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ')+'" fill="none" stroke="#cfc7b2" stroke-width="1" opacity="0.55"/>';});
+    var axes='', labels='', dots='';
+    DIMS.forEach(function(d,i){
+      var e=pt(100,i); axes+='<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0].toFixed(1)+'" y2="'+e[1].toFixed(1)+'" stroke="#cfc7b2" stroke-width="1"/>';
+      var l=pt(124,i); var anc=Math.abs(l[0]-cx)<10?'middle':(l[0]>cx?'start':'end');
+      labels+='<text x="'+l[0].toFixed(1)+'" y="'+(l[1]+3).toFixed(1)+'" text-anchor="'+anc+'" font-size="11.5" fill="#6f685b" font-family="Corbel,sans-serif">'+d.k+'</text>';
+      var pb=pt(d.b,i), pp=pt(d.p,i);
+      dots+='<circle cx="'+pb[0].toFixed(1)+'" cy="'+pb[1].toFixed(1)+'" r="3" fill="#3a5a7d"/><circle cx="'+pp[0].toFixed(1)+'" cy="'+pp[1].toFixed(1)+'" r="3" fill="#c2683f"/>';
+    });
+    var svg='<svg viewBox="0 0 380 340" role="img">'+rings+axes+
+      '<polygon points="'+polyPts('b')+'" fill="#3a5a7d22" stroke="#3a5a7d" stroke-width="2"/>'+
+      '<polygon points="'+polyPts('p')+'" fill="#c2683f3a" stroke="#c2683f" stroke-width="2"/>'+dots+labels+'</svg>';
+    S('radar', svg);
+    S('score', DIMS.map(function(d){
+      if(d.ref){
+        return '<div class="sd"><div class="sdh"><b>'+d.k+'</b><span class="sdg win">'+d.p+'% less</span></div>'+
+          '<div class="sb refbar"><span class="refl">no plugin = the baseline (0)</span></div>'+
+          '<div class="sb"><i style="width:'+d.p+'%;background:var(--full)"></i></div></div>';
+      }
+      var gap=d.p-d.b, cls=Math.abs(gap)<2?'tie':(gap>0?'win':'lose'), sign=gap>0?'+':'';
+      return '<div class="sd"><div class="sdh"><b>'+d.k+'</b><span class="sdg '+cls+'">'+(cls==='tie'?'about even':sign+gap+' pts')+'</span></div>'+
+        '<div class="sb"><i style="width:'+d.b+'%;background:var(--base)"></i></div>'+
+        '<div class="sb"><i style="width:'+d.p+'%;background:var(--full)"></i></div></div>';
+    }).join(''));
+  })();
+
+  // D4b economics
+  (function(){
+    var b=D.tokens.baseline, f=D.tokens.full;
+    function pct(cur,base){return Math.round(100*(cur/base-1));}
+    var outP=pct(f.out_tok,b.out_tok), inP=pct(f.in_tok,b.in_tok), costP=pct(f.cost_usd,b.cost_usd);
+    function card(cls,val,h,s){return '<div class="ecard '+cls+'"><div class="eh">'+h+'</div><div class="ev">'+val+'</div><div class="es">'+s+'</div></div>';}
+    S('econ',
+      card('down',outP+'%','What the model writes (output)','from about '+b.out_tok+' to '+f.out_tok+' tokens a run')+
+      card('up','+'+inP+'%','What the model reads (input)','from about '+b.in_tok+' to '+f.in_tok+' tokens, the plugin instructions')+
+      card('flat','+'+costP+'%','Cost per run','you pay for both, and the input side is bigger'));
+    S('econnote','The effectiveness is leaner code, measured on the output side. On a cold first run the plugin instructions are read fresh; on later runs in the same session they are cached and cheap, so this gap narrows.');
+  })();
+
+  // D5a per-task before/after paired bars (no plugin vs Full), code size + output tokens
+  (function(){
+    var sorted=D.tasks.slice().sort(function(a,b){return (b.size_red_full||0)-(a.size_red_full||0);});
+    var maxS=Math.max.apply(null,D.tasks.map(function(t){return Math.max(t.abs.size_base||0,t.abs.size_full||0);}));
+    var maxO=Math.max.apply(null,D.tasks.map(function(t){return Math.max(t.abs.out_base||0,t.abs.out_full||0);}));
+    function harm(t){return Math.min(t.robust.lite,t.robust.full,t.robust.ultra)-t.robust.baseline<-1;}
+    function rows(kb,kp,max){return sorted.map(function(t){
+      var wb=Math.max((t.abs[kb]||0)/max*100,3), wp=Math.max((t.abs[kp]||0)/max*100,3);
+      return '<div class="prow"><div class="pl"'+(harm(t)?' style="color:var(--bad)"':'')+'>'+t.name+'</div>'+
+        '<div class="pbar b" style="width:'+wb+'%">'+(t.abs[kb]||0)+'</div>'+
+        '<div class="pbar p" style="width:'+wp+'%">'+(t.abs[kp]||0)+'</div></div>';
+    }).join('');}
+    S('pairSize', rows('size_base','size_full',maxS));
+    S('pairTok', rows('out_base','out_full',maxO));
+  })();
+
+  // D2c failure heatmap (job x level, bad-input handling %)
+  (function(){
+    function hcol(v){return v>=100?'#4f7a52':v>=67?'#7d9a5a':v>=34?'#c79a3a':v>=1?'#cc7a33':'#b0453a';}
+    var rows=D.tasks.slice().sort(function(a,b){
+      var ha=Math.min(a.robust.lite,a.robust.full,a.robust.ultra)-a.robust.baseline;
+      var hb=Math.min(b.robust.lite,b.robust.full,b.robust.ultra)-b.robust.baseline;
+      return ha-hb;
+    });
+    var html='<div class="hh"></div><div class="hh">No plugin</div><div class="hh">Lite</div><div class="hh">Full</div><div class="hh">Ultra</div>';
+    rows.forEach(function(t){
+      html+='<div class="hn">'+t.name+'</div>';
+      ['baseline','lite','full','ultra'].forEach(function(c){var v=t.robust[c];
+        html+='<div class="hc" style="background:'+hcol(v)+'">'+v+'</div>';});
+    });
+    S('heatmap',html);
+  })();
+
+  // D3b output vs parsed-size divergence (top 10 most divergent jobs)
+  (function(){
+    var SMAX=80;
+    var ranked=D.tasks.filter(function(t){return t.out_red_full!=null && t.size_red_full!=null;})
+      .map(function(t){return {t:t, gap:Math.abs(t.out_red_full-t.size_red_full)};})
+      .sort(function(a,b){return b.gap-a.gap;}).slice(0,10);
+    S('dumb', ranked.map(function(o){var t=o.t;
+      var ox=Math.max(0,Math.min(t.out_red_full,SMAX))/SMAX*100, sx=Math.max(0,Math.min(t.size_red_full,SMAX))/SMAX*100;
+      var lo=Math.min(ox,sx), hi=Math.max(ox,sx); var d=t.out_red_full-t.size_red_full;
+      return '<div class="dumb"><span class="dl">'+t.name+'</span>'+
+        '<div class="dtrack"><div class="dline" style="left:'+lo+'%;width:'+(hi-lo)+'%"></div>'+
+        '<div class="dpt" style="left:'+sx+'%;background:var(--base)" title="parsed code: '+t.size_red_full+'% reduction"></div>'+
+        '<div class="dpt" style="left:'+ox+'%;background:var(--full)" title="output: '+t.out_red_full+'% reduction"></div></div>'+
+        '<span class="dg">'+(d>0?'+':'')+d+' pp</span></div>';
+    }).join(''));
+  })();
+
+  // D4b2 token mix (input vs output per condition)
+  (function(){
+    var conds=[['baseline','No plugin'],['lite','Lite'],['full','Full'],['ultra','Ultra']];
+    var maxT=0; conds.forEach(function(p){var v=D.tokens[p[0]]; maxT=Math.max(maxT,v.in_tok+v.out_tok);});
+    S('tokmix', conds.map(function(p){var v=D.tokens[p[0]];
+      var wIn=v.in_tok/maxT*100, wOut=v.out_tok/maxT*100;
+      return '<div class="tmix"><span class="tl">'+p[1]+'</span><div class="tbar">'+
+        '<div class="tin" style="width:'+wIn+'%" title="input '+v.in_tok+' tokens">'+(wIn>16?v.in_tok+' read':'')+'</div>'+
+        '<div class="tout" style="width:'+wOut+'%" title="output '+v.out_tok+' tokens">'+(wOut>10?v.out_tok+' write':'')+'</div></div></div>';
+    }).join(''));
+  })();
+
+  // D5 task cards grouped by stratum
+  var groups={};
+  D.tasks.forEach(function(t){(groups[t.stratum]=groups[t.stratum]||[]).push(t);});
+  var openFirst=true;
+  S('taskGroups', order.filter(function(s){return groups[s];}).map(function(s){
+    var ts=groups[s]; var plain=ts[0].stratum_plain;
+    var med=D.strata[s]?D.strata[s].out_red_full:0;
+    var cards=ts.map(function(t){
+      var first=t.prompt.split(/(?<=[.?!])\s/)[0];
+      function ind(v,lbl){var col=v==null?'var(--line2)':(v>=99?'var(--good)':(v>=50?'var(--warn)':'var(--bad)'));
+        return '<i style="background:'+col+'" title="'+lbl+': '+(v==null?'not tested':v+'%')+'"></i>';}
+      function cell(c){var nm=LV.filter(function(p){return p[0]===c;})[0][1];
+        var secv=(t.stratum==='security-sensitive')?t.secure[c]:null;
+        return '<div class="c" style="border-bottom:2px solid '+C[c]+'"><span class="cn">'+nm+'</span><b>'+(t.out_red[c]!=null?('-'+t.out_red[c]+'%'):'-')+'</b>'+
+          '<div class="ind">'+ind(t.correct[c],'stays correct')+ind(secv,'stays secure')+ind(t.robust[c],'handles bad input')+'</div></div>';}
+      return '<div class="card" data-name="'+(t.name+' '+t.id+' '+t.domain).toLowerCase()+'"><div class="top"><h4>'+t.name+'</h4><span class="tag">'+t.lang+'</span></div>'+
+        '<div class="ask">'+esc(first)+'</div>'+
+        '<div class="catch">code -'+ (t.out_red_full!=null?t.out_red_full:'?') +'% at Full &middot; bad-input handling '+t.robust.baseline+'% &rarr; '+t.robust.full+'%</div>'+
+        '<div class="res">'+['lite','full','ultra'].map(cell).join('')+'</div></div>';
+    }).join('');
+    var op = openFirst ? ' open data-default-open="1"' : ' data-default-open="0"'; openFirst=false;
+    return '<details class="grp"'+op+'><summary><span>'+plain+'</span><span class="meta">'+ts.length+' jobs &middot; ~-'+med+'% code</span></summary><div class="cards">'+cards+'</div></details>';
+  }).join(''));
+  function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  window.filterTasks=function(q){
+    q=(q||'').trim().toLowerCase();
+    var grps=document.querySelectorAll('#taskGroups .grp'), hits=0;
+    grps.forEach(function(g){
+      var any=false;
+      g.querySelectorAll('.card').forEach(function(c){
+        var m=!q||(c.getAttribute('data-name')||'').indexOf(q)>-1;
+        c.style.display=m?'':'none'; if(m){any=true;hits++;}
+      });
+      g.style.display=any?'':'none';
+      if(q){g.open=any;} else {g.open=g.dataset.defaultOpen==='1';}
+    });
+    document.getElementById('taskNohits').style.display=(q&&!hits)?'block':'none';
+  };
+
+  // method short
+  S('method','<div class="brow"><span class="bl">Builds</span><div class="track"><div class="fill" style="width:100%;background:var(--base)">'+D.meta.runs+' (24 jobs x 4 ways x 5 runs)</div></div></div>'+
+    '<div class="brow"><span class="bl">Model</span><div class="track"><div class="fill" style="width:100%;background:var(--full)">'+D.meta.model+', real plugin via the CLI</div></div></div>'+
+    '<div class="brow"><span class="bl">Graded by</span><div class="track"><div class="fill" style="width:100%;background:var(--good)">running the code + firing real attacks</div></div></div>');
+
+  S('foot','Ponytail Benchmark v3 &middot; '+D.meta.runs+' builds &middot; '+D.meta.tasks+' jobs &middot; no plugin / Lite / Full / Ultra &middot; '+D.meta.model);
+})();
+</script>
+</body></html>

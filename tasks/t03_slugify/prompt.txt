@@ -1,0 +1,1 @@
+For my blog I want to turn post titles into URL-friendly slugs. Write a Node script that reads a title on standard input and prints the slug. So "My First Post!" should come out as "my-first-post" — lowercase, with the spaces and punctuation turned into single dashes and no dash hanging off either end.

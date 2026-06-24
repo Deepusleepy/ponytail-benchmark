@@ -1,0 +1,1 @@
+Write a Python script that reads an ISO-8601 duration like PT1H30M or P2DT5S from standard input and prints the total number of seconds it represents. It only ever deals with weeks, days, hours, minutes, and seconds (so no year or month parts), and the seconds part can be fractional like PT0.5S.

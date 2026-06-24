@@ -1,0 +1,1 @@
+I need a Node script that converts between regular numbers and Roman numerals. If I give it a number on the command line it prints the Roman numeral, and if I give it a Roman numeral it prints the number. It should handle values from 1 up to 3999 and use the usual subtractive forms like IV and IX rather than writing everything out with repeated letters.

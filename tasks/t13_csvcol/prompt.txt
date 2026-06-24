@@ -1,0 +1,1 @@
+I have CSV files with a header row and I want to pull out a single column. Write a Node script where I pass the column name on the command line and pipe the CSV in on standard input, and it prints out the values from that column, one per line.

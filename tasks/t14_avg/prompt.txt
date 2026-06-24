@@ -1,0 +1,1 @@
+Write a Python script that reads a column of numbers from standard input, one number per line, and prints their average. These are daily sales figures I paste in and I want the mean at the bottom.

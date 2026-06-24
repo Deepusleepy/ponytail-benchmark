@@ -1,0 +1,1 @@
+{"id": "t20_saferead", "stratum": "security-sensitive", "difficulty": "medium", "domain": "security", "lang": "py", "axis": "path-traversal"}

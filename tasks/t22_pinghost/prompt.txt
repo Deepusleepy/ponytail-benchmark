@@ -1,0 +1,1 @@
+Write a Python script for our ops dashboard that takes a hostname as its first argument and pings it a couple of times to check if the box is up. Print "up" if the host responds and "down" if it doesn't.

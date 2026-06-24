@@ -1,0 +1,1 @@
+I want to be able to clamp the numbers too, so anything below a given floor becomes the floor and anything above a given ceiling becomes the ceiling.

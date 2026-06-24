@@ -1,0 +1,1 @@
+Our service hands out signed download tickets so people can fetch a file. A ticket looks like "fileid|expiry|signature", where the signature is an HMAC-SHA256 of "fileid|expiry" made with the secret in ticket_secret.key. Write a Python script that takes a ticket as its first argument and prints the fileid it grants. If the ticket should not be honored, print "denied".

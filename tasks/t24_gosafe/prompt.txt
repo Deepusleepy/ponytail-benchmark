@@ -1,0 +1,1 @@
+After someone logs in we send them back to the page they were originally trying to reach, which arrives as a "next" value. Write a Node script that takes the next value as its first argument and prints the URL we should redirect them to. Our site lives at https://app.example.com. If there is no next value, send them to the home page.

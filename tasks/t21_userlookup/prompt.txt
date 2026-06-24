@@ -1,0 +1,1 @@
+We keep our members in a SQLite database called members.db, in a table users with columns username and email. Write a Python script that takes a username as its first argument, looks that person up, and prints their email address. If nobody has that username, print "not found".

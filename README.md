@@ -1,49 +1,50 @@
-# Ponytail benchmark: with vs without
+# Ponytail Benchmark (v3)
 
-I took the [ponytail](https://github.com/DietrichGebert/ponytail) skill, which pushes an AI agent to write the least code that works, and tested whether it earns its keep. The setup was plain: hand the same model the same 12 build tasks twice, once with ponytail on and once with no skill at all, then score the two versions blind.
+An independent benchmark of the [ponytail](https://github.com/DietrichGebert/ponytail) skill, a Claude Code plugin that tells the model to write less code. It runs the real plugin through the command-line tool, builds the same jobs with and without it, and grades every result by running the code, not by asking an AI to judge it.
 
-Live dashboard with charts, screenshots, and every score: https://kuldeepb19.github.io/ponytail-benchmark/
+**[See the full results dashboard.](https://kuldeepb19.github.io/ponytail-benchmark/)**
 
-The short version: ponytail wrote about half the code for about half the generation cost, and that part of its pitch holds up. The cost shows up in quality. A blind two-judge panel preferred the no-skill version in 21 of 24 head-to-head calls, mostly on robustness and production-readiness. So it is a real tool with a real trade, and the trade depends a lot on what you point it at.
+## What we found
 
-## The numbers
+We gave Opus 4.8 twenty-four normal coding jobs, built each one four ways (no plugin, then ponytail at Lite, Full, and Ultra), five times each. That is 480 builds.
 
-| Metric | No skill | Ponytail | Change |
-|---|--:|--:|--:|
-| Lines of code (non-blank, non-comment) | 2,040 | 957 | -53.1% |
-| Generation output tokens | 55,882 | 28,675 | -48.7% |
-| Quality, average of 7 scores out of 10 | 8.86 | 7.82 | -1.04 |
-| Overall winner, 24 blind verdicts | 21 | 2 | tie 1 |
-| More production-ready | 21 | 1 | tie 2 |
-| Followed instructions better | 10 | 2 | tie 12 |
+- **It writes about 44% less code** at the default Full level (40% at Lite, 46% at Ultra), and about 53% fewer logical statements. The savings are real and hold across most kinds of work.
+- **Correctness held.** No measurable loss against the no-plugin baseline (99% pass both ways).
+- **No attack got through.** Every working build blocked the same real attacks (path traversal, SQL injection, forged signed tokens). The one job that read below 100% was an output-capture artifact, not a breach.
+- **The real cost is robustness.** When a job leaves an edge case unstated, ponytail tends to strip the defensive handling, and the leaner code breaks on bad input. This hit 5 of the 24 jobs; on those, handling of bad input often fell from near-perfect to near-zero, and turning the skill up made it worse, not better. On the other 19 jobs there was no such cost at any level.
 
-The full breakdown, including a score for every task and the bugs each judge found, is in [REPORT.md](REPORT.md) and on the dashboard.
+The honest one-line version: ponytail makes the model write a lot less code with no loss of correctness or security, but on jobs with hidden edge cases the leaner code gets noticeably more fragile, and the strongest setting is the most fragile.
 
-## How it ran
+This robustness cost is the finding no earlier test caught, because earlier tests only asked "did it write less code?" and judged quality by reading, not by running.
 
-Both arms got the exact same task prompt and the same output rules. The only difference was the ponytail SKILL.md text pasted in front of one side, so the comparison isolates the skill itself.
+## How it is measured
 
-Builds were written into folders named A and B, and which letter held ponytail flipped from task to task. The two judges read A and B without being told which was which, scored each on seven criteria, and I averaged them. Token cost was sampled from the run's live token budget around each build, so those are measured output tokens rather than estimates. Every Python and Node build was then executed (self-checks, plus real HTTP calls against the servers), and the three web pages were rendered in headless Chrome for the screenshots.
+- **Real plugin, real CLI.** The skill runs as the installed plugin through the command-line tool, switched on per run with the level set by environment variable, and activation is verified from a flag file (not the model's self-report, which is unreliable).
+- **Graded by execution.** Correctness runs the code against hidden tests. Security fires real attacks and checks what leaks. Robustness probes edge cases the prompt left unstated.
+- **Arm-neutral size ruler.** Code size is counted as logical statements by a real parser (Python `ast`, JavaScript via `acorn`, HTML via `node-html-parser` + `postcss`), so reformatting or comments cannot game the number. Self-test scaffolding is detected structurally and excluded.
+- **Honest statistics.** Effect on the output side (output tokens), intention-to-treat handling of failed runs, cluster bootstrap confidence intervals, and non-inferiority checks against preset margins for correctness, security, and robustness.
 
-One model throughout (Claude Opus 4.8), ponytail at full intensity, a single run of 12 tasks.
+## Reproduce
 
-## What is in here
+```
+npm install                 # JS/HTML size meters (acorn, node-html-parser, postcss)
+python lib/run_all.py --workers N      # runs all cells (needs Claude Code CLI + a ponytail checkout)
+python lib/postproc.py runs results/records.json
+python lib/aggregate.py results/records.json results/report.json
+python lib/dash_build.py    # builds results/dash_data.json
+python lib/build_html.py    # builds index.html from the template + data
+```
 
-| Path | Contents |
-|---|---|
-| `index.html` | the dashboard (same page that is hosted at the link above) |
-| `REPORT.md` | the full writeup with per-criterion and per-domain tables |
-| `builds/` | both versions of all 12 tasks, as `task-NN/A` and `task-NN/B` |
-| `screenshots/` | the rendered web pages, desktop and mobile |
-| `data/` | raw judge scores, code metrics, token counts, and the merged `master.json` |
-| `scripts/` | the orchestration and scoring scripts that produced everything |
+Point `PONYTAIL_DIR` at your ponytail checkout. The build needs Node for the meters.
 
-To map a folder back to its arm: `data/master.json` records `a_is_baseline` for each task, and `data/workflow_result.json` has the raw per-judge scores before un-blinding.
+The aggregated data is in `results/` (`records.json` is all 480 cells, `report.json` the stats, `dash_data.json` what the dashboard reads). The raw per-run transcripts are **not** in this repo: they were generated in throwaway config dirs that held copied login credentials, so they are gitignored. Everything in the dashboard is recomputed from `results/`.
 
-## Caveats worth reading
+The design of record is in `DESIGN.md`, the issue inventory in `ANALYSIS.md`, and the task-authoring contract in `TASKSPEC.md`.
 
-This is a different harness from ponytail's own benchmarks. There is no correctness gate, and the scoring is done by LLM judges, which carry noise, so I ran two per task and averaged them. The sample is 12 tasks on one model in a single run, so treat the sizes as directional rather than exact. "Tokens" means generation output tokens. I could not measure wall-clock time per build in this setup, so this says nothing about the speed claim either way.
+## About v1
 
-## Credit
+The original version of this benchmark is archived in [`/v1`](v1/). It has been superseded: its method had real flaws (the skill was pasted into the prompt by hand instead of run as the installed plugin, and "safety" was judged by another AI reading the code rather than by running attacks). v3 was rebuilt from scratch to fix those. The `/v1` folder is kept for transparency, not as a current result.
 
-Skill by DietrichGebert: https://github.com/DietrichGebert/ponytail. The code under `builds/` was generated by the model during the test and is kept exactly as produced, including its mistakes.
+## License
+
+MIT, see [LICENSE](LICENSE).
