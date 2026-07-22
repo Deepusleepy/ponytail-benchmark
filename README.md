@@ -2,7 +2,7 @@
 
 An independent benchmark of the [ponytail](https://github.com/DietrichGebert/ponytail) skill, a Claude Code plugin that tells the model to write less code. It runs the real plugin through the command-line tool, builds the same jobs with and without it, and grades every result by running the code, not by asking an AI to judge it.
 
-**[See the full results dashboard.](https://kuldeepb19.github.io/ponytail-benchmark/)**
+**[Explore the full results dashboard.](https://deepusleepy.github.io/ponytail-benchmark/)**
 
 ## What we found
 

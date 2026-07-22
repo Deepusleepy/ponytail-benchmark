@@ -1,18 +1,21 @@
 {
-  "name": "v3",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "ponytail-benchmark",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Execution-graded benchmark of the Ponytail coding-efficiency plugin.",
   "directories": {
     "lib": "lib",
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --check lib/metrics_html.js && node --check lib/metrics_js.js && python3 -m py_compile lib/*.py",
+    "build:dashboard": "python3 lib/dash_build.py && python3 lib/build_html.py"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "repository": "github:Deepusleepy/ponytail-benchmark",
+  "homepage": "https://deepusleepy.github.io/ponytail-benchmark/",
+  "keywords": ["ai-evaluation", "benchmark", "claude-code", "code-generation", "llm"],
+  "author": "Deepu",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "acorn": "^8.17.0",

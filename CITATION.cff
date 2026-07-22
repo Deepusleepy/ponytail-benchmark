@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this benchmark or its results, please cite this repository."
+title: "Ponytail Benchmark"
+type: software
+version: 3.0.0
+date-released: 2026-06-24
+authors:
+  - family-names: "Deepu"
+repository-code: "https://github.com/Deepusleepy/ponytail-benchmark"
+url: "https://deepusleepy.github.io/ponytail-benchmark/"
+license: MIT

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Build dashboard.html from the template: inject the data JSON and the two
+"""Build the published index.html from the template: inject the data JSON and two
 embedded FAQ preview images (base64). Single self-contained output file."""
-import os, sys
+import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 tpl = open(os.path.join(ROOT, "dashboard_template.html"), encoding="utf-8").read()
@@ -17,10 +17,7 @@ out = tpl.replace("/*__DATA__*/", data)
 out = out.replace("/*__FAQ_BASE__*/", "data:image/png;base64," + b64("_faq_base.b64"))
 out = out.replace("/*__FAQ_FULL__*/", "data:image/png;base64," + b64("_faq_full.b64"))
 
-# punctuation guard for the AUTHORED copy (the embedded base64 images are exempt)
-authored = out
-for tag in ['data:image/png;base64,']:
-    pass
+# Punctuation guard for authored copy (embedded base64 images are exempt).
 bad = {"em dash": "—", "en dash": "–", "curly ldq": "“",
        "curly rdq": "”", "curly lsq": "‘", "curly rsq": "’"}
 # strip base64 blobs before checking punctuation (images are binary, not prose)
@@ -30,6 +27,6 @@ for nm, ch in bad.items():
     if ch in check:
         print("WARN authored copy contains", nm, "x", check.count(ch))
 
-open(os.path.join(ROOT, "dashboard.html"), "w", encoding="utf-8").write(out)
-print("built dashboard.html:", len(out), "bytes | placeholders left:",
+open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(out)
+print("built index.html:", len(out), "bytes | placeholders left:",
       out.count("/*__"), "| imgs embedded:", out.count("data:image/png;base64,"))
