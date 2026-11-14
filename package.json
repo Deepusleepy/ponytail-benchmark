@@ -18,10 +18,10 @@
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
-    "acorn": "^8.17.0",
+    "acorn": "^8.19.0",
     "acorn-walk": "^8.3.5",
-    "node-html-parser": "^8.0.3",
-    "postcss": "^8.5.15",
-    "postcss-safe-parser": "^7.0.1"
+    "node-html-parser": "^9.0.7",
+    "postcss": "^8.5.32",
+    "postcss-safe-parser": "^7.1.0"
   }
 }
